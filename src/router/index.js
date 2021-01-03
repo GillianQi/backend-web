@@ -60,18 +60,6 @@ export default new Router({
           meta: { title: '发票管理' }
         },
         {
-          // 图片上传组件
-          path: '/upload',
-          component: () => import(/* webpackChunkName: "upload" */ '@/views/Upload.vue'),
-          meta: { title: '文件上传' }
-        },
-        {
-          // 权限页面
-          path: '/permission',
-          component: () => import(/* webpackChunkName: "permission" */ '@/views/Permission.vue'),
-          meta: { title: '权限测试', permission: true }
-        },
-        {
           path: '/404',
           component: () => import(/* webpackChunkName: "404" */ '@/views/404.vue'),
           meta: { title: '404' }
@@ -87,10 +75,6 @@ export default new Router({
       path: '/login',
       component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue'),
       meta: { title: '登录' }
-    },
-    // {
-    //   path: '*',
-    //   redirect: '/404'
-    // }
+    }
   ]
 });

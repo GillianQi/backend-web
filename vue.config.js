@@ -24,7 +24,7 @@ module.exports = {
     port: 8088,
     proxy: {
       '/api': {
-        target: 'http://172.20.10.3:8081/',
+        target: 'https://admin.jxbanchen.com/',
         ws: true,
         changeOrigin: true,
         pathRewrite: {
@@ -32,7 +32,7 @@ module.exports = {
         }
       },
       '/user': {
-        target: 'http://172.20.10.3:8081/',
+        target: 'https://admin.jxbanchen.com/',
         ws: true,
         changeOrigin: true,
         pathRewrite: {
@@ -40,7 +40,7 @@ module.exports = {
         }
       },
       '/companyInfo': {
-        target: 'http://172.20.10.3:8081/',
+        target: 'https://admin.jxbanchen.com/',
         ws: true,
         changeOrigin: true,
         pathRewrite: {
