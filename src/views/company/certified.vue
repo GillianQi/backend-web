@@ -22,7 +22,7 @@
         <el-table-column prop="bankName" label="开户行账号"></el-table-column>
         <el-table-column prop="taxpayAddress" label="开票地址"></el-table-column>
         <el-table-column prop="mobile" label="联系电话"></el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" width="220" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"
@@ -33,7 +33,12 @@
               type="text"
               icon="el-icon-view"
               @click="viewEngineerList(scope.$index, scope.row)"
-            >查看</el-button>
+            >项目列表</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-view"
+              @click="viewRechargeHistory(scope.$index, scope.row)"
+            >充值记录</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -69,6 +74,10 @@
 </template>
 
 <script>
+import {
+  getCompanyList
+} from '@/api/'
+
 export default {
   name: 'basetable',
   data() {
@@ -79,42 +88,7 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      tableData: [
-        {
-          accountNum: 0,
-          authStatus: "1",
-          bankAccount: "11111111111111111",
-          bankName: "招商银行",
-          companyImg: require('@/assets/img/img.jpg'),
-          companyName: "测试公司名称",
-          createTime: "",
-          createUser: 0,
-          id: 0,
-          mobile: "13533333322",
-          status: 0,
-          taxpayAddress: "上海市11111111",
-          taxpayerNum: "11111",
-          updateTime: "",
-          updateUser: 0,
-        },
-        {
-          accountNum: 0,
-          authStatus: "1",
-          bankAccount: "11111111111111111",
-          bankName: "招商银行",
-          companyImg: require('@/assets/img/img.jpg'),
-          companyName: "测试公司名称",
-          createTime: "",
-          createUser: 0,
-          id: 0,
-          mobile: "13533333322",
-          status: 0,
-          taxpayAddress: "上海市11111111",
-          taxpayerNum: "11111",
-          updateTime: "",
-          updateUser: 0,
-        }
-      ],
+      tableData: [],
       editVisible: false,
       pageTotal: 0,
       form: {},
@@ -126,13 +100,14 @@ export default {
     this.getData();
   },
   methods: {
-    // 获取 easy-mock 的模拟数据
-    getData() {
-      // fetchData(this.query).then(res => {
-      //   console.log(res);
-      //   this.tableData = res.list;
-      //   this.pageTotal = res.pageTotal || 50;
-      // });
+    async getData() {
+      const params = {
+        authStatus: '2',
+        page: 0,
+        pageSize: 10
+      }
+      const res = await getCompanyList(params)
+      this.tableData = res.list
     },
     // 触发搜索按钮
     handleSearch() {
@@ -153,11 +128,16 @@ export default {
     },
     // 查看工程列表
     viewEngineerList(index, row) {
-      // this.idx = index;
-      // this.form = row;
-      // this.editVisible = true;
       this.$router.push({
         path: '/company-engineer',
+        query: {
+          id: row.id
+        }
+      })
+    },
+    viewRechargeHistory(index, row) {
+      this.$router.push({
+        path: '/recharge-history',
         query: {
           id: row.id
         }

@@ -59,14 +59,18 @@
 </template>
 
 <script>
+import {
+  getWorkerListApi
+} from '@/api/'
+
 export default {
   name: 'workers',
 
   data() {
     return {
       query: {
-        address: '',
-        name: '',
+        workerName: '',
+        workStatus	: '',
         pageIndex: 1,
         pageSize: 10
       },
@@ -107,12 +111,9 @@ export default {
   },
   methods: {
     // 获取 easy-mock 的模拟数据
-    getData() {
-      // fetchData(this.query).then(res => {
-      //   console.log(res);
-      //   this.tableData = res.list;
-      //   this.pageTotal = res.pageTotal || 50;
-      // });
+    async getData() {
+      const res = await getWorkerListApi(this.query)
+      console.log(res)
     },
     // 触发搜索按钮
     handleSearch() {

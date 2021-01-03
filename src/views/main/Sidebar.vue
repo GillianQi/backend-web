@@ -73,6 +73,10 @@ export default {
             {
               index: 'company-certified',
               title: '已认证'
+            },
+            {
+              index: 'recharge-apply',
+              title: '充值申请'
             }
           ]
         },

@@ -7,28 +7,34 @@
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header">
-        <el-table-column prop="companyName" label="公司名称"></el-table-column>
-        <el-table-column label="营业执照" align="center">
+        <el-table-column prop="userName" label="用户认证姓名"></el-table-column>
+        <el-table-column prop="accountChange" label="金额"></el-table-column>
+        <el-table-column prop="companyName" label="服务商"></el-table-column>
+        <el-table-column prop="bankName" label="转账凭证">
           <template slot-scope="scope">
             <el-image
               class="table-td-thumb"
-              :src="scope.row.companyImg"
-              :preview-src-list="[scope.row.companyImg]"
+              :src="scope.row.accountChangeImg"
+              :preview-src-list="[scope.row.accountChangeImg]"
             ></el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="taxpayerNum" label="纳税人识别号"></el-table-column>
-        <el-table-column prop="bankAccount" label="开户行名称"></el-table-column>
-        <el-table-column prop="bankName" label="开户行账号"></el-table-column>
-        <el-table-column prop="taxpayAddress" label="开票地址"></el-table-column>
-        <el-table-column prop="mobile" label="联系电话"></el-table-column>
+        <el-table-column prop="descript" label="备注"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
-            <el-button
-              type="text"
-              icon="el-icon-edit"
-              @click="authCompany(scope.$index, scope.row)"
-            >认证</el-button>
+            <span v-if="applyStatus === '1'">
+              <el-button
+                type="text"
+                icon="el-icon-edit"
+                @click="authCompany(scope.$index, scope.row)"
+              >同意</el-button>
+              <el-button
+                type="text"
+                icon="el-icon-edit"
+                @click="authCompany(scope.$index, scope.row)"
+              >驳回</el-button>
+            </span>
+            <span v-else></span>
           </template>
         </el-table-column>
       </el-table>
@@ -51,8 +57,8 @@
         <div class="company-name">{{form.companyName}}</div>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleAuth(2)">拒 绝</el-button>
-        <el-button type="primary" @click="handleAuth(1)">同 意</el-button>
+        <el-button @click="editVisible == false">取 消</el-button>
+        <!-- <el-button type="primary" @click="confirm()">确 定</el-button> -->
       </span>
     </el-dialog>
   </div>
@@ -60,8 +66,7 @@
 
 <script>
 import {
-  getCompanyList,
-  handleAuthApi
+  rechargeApplyListApi
 } from '@/api/'
 
 export default {
@@ -93,7 +98,7 @@ export default {
         page: 0,
         pageSize: 10
       }
-      const res = await getCompanyList(params)
+      const res = await rechargeApplyListApi(params)
       this.tableData = res.list
     },
     // 触发搜索按钮
@@ -130,16 +135,6 @@ export default {
       this.idx = index;
       this.form = row;
       this.editVisible = true;
-    },
-    // 保存编辑
-    async handleAuth(type) {
-      const res = await handleAuthApi({companyId: this.form.id, flag: type})
-      if (res && res.code === 0) {
-        this.$message.success('认证成功');
-        this.editVisible = false;
-      } else {
-        this.$message.error('认证失败')
-      }
     },
     // 分页导航
     handlePageChange(val) {

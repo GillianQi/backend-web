@@ -1,5 +1,5 @@
 import axios from 'axios';
-// import qs from 'qs'
+import qs from 'qs'
 
 axios.interceptors.request.use(
   config => {
@@ -44,8 +44,24 @@ export function httpGet(url, params) {
 
 export function httpPost(url, params) {
   axios.defaults.timeout = 6000;
-  // axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-  axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8';
+  axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+  // axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8';
+  const token = localStorage.getItem('token')
+  if (token) {
+    axios.defaults.headers['access_token'] = token
+  }
+  return new Promise((resolve, reject) => {
+    axios.post(url, qs.stringify(params))
+      .then(res => {
+        resolve(res)
+      }), error => {
+        reject(error)
+      }
+  })
+}
+
+export function httpPostJSON(url, params) {
+  axios.defaults.timeout = 6000;
   const token = localStorage.getItem('token')
   if (token) {
     axios.defaults.headers['access_token'] = token
@@ -59,21 +75,3 @@ export function httpPost(url, params) {
       }
   })
 }
-
-// export function httpPost(url, params) {
-//   axios.defaults.timeout = 6000;
-//   // axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-//   // axios.defaults.headers['Content-Type'] = 'applcation/json;charset=UTF-8';
-//   const token = localStorage.getItem('token')
-//   if (token) {
-//     axios.defaults.headers['access_token'] = token
-//   }
-//   return new Promise((resolve, reject) => {
-//     axios.post(url, qs.stringify(params))
-//       .then(res => {
-//         resolve(res)
-//       }), error => {
-//         reject(error)
-//       }
-//   })
-// }

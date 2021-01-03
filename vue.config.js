@@ -46,8 +46,23 @@ module.exports = {
         pathRewrite: {
           '^/companyInfo': '/companyInfo'
         }
-      }
+      },
+      '/worker': {
+        target: 'https://admin.jxbanchen.com/',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/worker': '/worker'
+        }
+      },
+      '/salaryInfo': {
+        target: 'https://admin.jxbanchen.com/',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/salaryInfo': '/salaryInfo'
+        }
+      },
     }
-    
   }
 };

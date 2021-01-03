@@ -35,6 +35,16 @@ export default new Router({
           meta: { title: '工程管理' }
         },
         {
+          path: '/recharge-apply',
+          component: () => import('@/views/company/rechargeApply.vue'),
+          meta: { title: '充值申请' }
+        },
+        {
+          path: '/recharge-history',
+          component: () => import('@/views/company/rechargeHistory.vue'),
+          meta: { title: '充值记录' }
+        },
+        {
           path: '/salary',
           component: () => import('@/views/salary/index.vue'),
           meta: { title: '工资管理-待申请' }

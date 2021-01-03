@@ -18,6 +18,8 @@ router.beforeEach((to, from, next) => {
   const role = localStorage.getItem('token');
   if (!role && to.path !== '/login') {
     next('/login');
+  } else if (role) {
+    next()
   } else {
     // 简单的判断IE10及以下不进入富文本编辑器，该组件不兼容
     if (navigator.userAgent.indexOf('MSIE') > -1 && to.path === '/editor') {
