@@ -22,8 +22,7 @@
         <el-table-column prop="updateUser" label="出勤天数"></el-table-column>
         <el-table-column prop="updateUser" label="手机号"></el-table-column>
         <el-table-column prop="updateUser" label="银行卡号"></el-table-column>
-        <el-table-column prop="updateUser" label="起始时间"></el-table-column>
-        <el-table-column prop="updateUser" label="终止时间"></el-table-column>
+        <el-table-column prop="updateUser" label="工资月份"></el-table-column>
         <el-table-column prop="updateUser" label="工资金额（元）"></el-table-column>
       </el-table>
       <div class="pagination">

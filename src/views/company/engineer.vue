@@ -1,9 +1,6 @@
 <template>
   <div>
     <div class="container">
-      <!-- <div class="handle-box">
-        公司111
-      </div> -->
       <el-table
         :data="tableData"
         border
@@ -68,6 +65,10 @@
 </template>
 
 <script>
+import {
+  getProjectListApi
+} from '@/api/'
+
 export default {
   name: 'engineer',
   data() {
@@ -78,40 +79,7 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      tableData: [
-        {
-          "companyId": 0,
-          "createTime": "",
-          "createUser": 0,
-          "descript": "",
-          "id": 0,
-          "programCompanyName": "公司111",
-          "programEndTime": "2020-11-11",
-          "programName": "工程111",
-          "programRealEndTime": "2020-11-11",
-          "programStartTime": "2020-11-11",
-          "programStatus": "0",
-          "status": 0,
-          "updateTime": "",
-          "updateUser": 0
-        },
-        {
-          "companyId": 0,
-          "createTime": "",
-          "createUser": 0,
-          "descript": "",
-          "id": 0,
-          "programCompanyName": "公司111",
-          "programEndTime": "2020-11-11",
-          "programName": "工程222",
-          "programRealEndTime": "2020-11-11",
-          "programStartTime": "2020-11-11",
-          "programStatus": "1",
-          "status": 0,
-          "updateTime": "",
-          "updateUser": 0
-        }
-      ],
+      tableData: [],
       delList: [],
       editVisible: false,
       pageTotal: 0,
@@ -124,13 +92,14 @@ export default {
     this.getData();
   },
   methods: {
-    // 获取 easy-mock 的模拟数据
-    getData() {
-      // fetchData(this.query).then(res => {
-      //   console.log(res);
-      //   this.tableData = res.list;
-      //   this.pageTotal = res.pageTotal || 50;
-      // });
+    async getData() {
+      const params = {
+        companyId: this.$route.query.id,
+        page: 0,
+        pageSize: 10
+      }
+      const res = await getProjectListApi(params)
+      console.log(res)
     },
     // 删除操作
     addWorkers(index, row) {
