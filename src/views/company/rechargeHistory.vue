@@ -7,10 +7,16 @@
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header">
-        <el-table-column prop="userName" label="用户认证姓名"></el-table-column>
-        <el-table-column prop="accountChange" label="金额"></el-table-column>
-        <el-table-column prop="companyName" label="服务商"></el-table-column>
-        <el-table-column prop="bankName" label="转账凭证">
+        <!-- <el-table-column prop="userName" label="用户认证姓名"></el-table-column> -->
+        <el-table-column prop="companyName" label="公司名称"></el-table-column>
+        <el-table-column prop="accountChange" label="金额">
+           <template slot-scope="scope">
+            <span v-if="scope.row.changeType == '1'">+</span>
+            <span v-else-if="scope.row.changeType == '0'">-</span>
+            <span>{{scope.row.accountChange}}</span>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column prop="bankName" label="转账凭证">
           <template slot-scope="scope">
             <el-image
               class="table-td-thumb"
@@ -18,7 +24,7 @@
               :preview-src-list="[scope.row.accountChangeImg]"
             ></el-image>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="descript" label="备注"></el-table-column>
       </el-table>
       <div class="pagination">
@@ -32,18 +38,6 @@
         ></el-pagination>
       </div>
     </div>
-
-    <!-- 编辑弹出框 -->
-    <el-dialog title="认证" :visible.sync="editVisible" width="30%">
-      
-      <el-form ref="form" :model="form" label-width="70px">
-        <div class="company-name">{{form.companyName}}</div>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="editVisible == false">取 消</el-button>
-        <!-- <el-button type="primary" @click="confirm()">确 定</el-button> -->
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -83,42 +77,9 @@ export default {
       }
       console.log(params)
       const res = await rechargeHistoryListApi(params)
-      this.tableData = res.list
-    },
-    // 触发搜索按钮
-    handleSearch() {
-      this.$set(this.query, 'pageIndex', 1);
-      this.getData();
-    },
-    // 删除操作
-    handleDelete(index, row) {
-      // 二次确认删除
-      this.$confirm('确定要删除吗？', '提示', {
-        type: 'warning'
-      })
-        .then(() => {
-          this.$message.success('删除成功');
-          this.tableData.splice(index, row);
-        })
-        .catch(() => {});
-    },
-    // 查看工程列表
-    viewEngineerList(index, row) {
-      // this.idx = index;
-      // this.form = row;
-      // this.editVisible = true;
-      this.$router.push({
-        path: '/company-engineer',
-        query: {
-          id: row.id
-        }
-      })
-    },
-    // 编辑操作
-    authCompany(index, row) {
-      this.idx = index;
-      this.form = row;
-      this.editVisible = true;
+      if (res && res.code === 0) {
+        this.tableData = res.data.list
+      }
     },
     // 分页导航
     handlePageChange(val) {

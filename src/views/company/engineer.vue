@@ -21,14 +21,14 @@
         </el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
-            <el-button
+            <!-- <el-button
               type="text"
               icon="el-icon-edit"
               @click="editEngineer(scope.$index, scope.row)"
-            >编辑</el-button>
+            >编辑</el-button> -->
             <el-button
               type="text"
-              icon="el-icon-add"
+              icon="el-icon-plus"
               @click="addWorkers(scope.$index, scope.row)"
             >添加工人</el-button>
           </template>
@@ -47,19 +47,8 @@
     </div>
 
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="姓名">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="editVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveEdit">确 定</el-button>
-      </span>
+    <el-dialog title="添加工人" :visible.sync="editVisible" width="80%">
+      <add-workers :programId="id" @close="closeAddWorkers"></add-workers>
     </el-dialog>
   </div>
 </template>
@@ -68,6 +57,7 @@
 import {
   getProjectListApi
 } from '@/api/'
+import addWorkers from './components/addWorker'
 
 export default {
   name: 'engineer',
@@ -79,7 +69,8 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      tableData: [],
+      isShowAddWorker: false,
+      tableData: [{}],
       delList: [],
       editVisible: false,
       pageTotal: 0,
@@ -101,11 +92,18 @@ export default {
       const res = await getProjectListApi(params)
       console.log(res)
     },
-    // 删除操作
+    // 操作
     addWorkers(index, row) {
+      this.id = row.id
       this.idx = index;
       this.form = row;
       this.editVisible = true;
+    },
+    closeAddWorkers() {
+      this.id = ''
+      this.idx = 0;
+      this.form = {};
+      this.editVisible = false
     },
     // 编辑操作
     editEngineer(index, row) {
@@ -124,6 +122,9 @@ export default {
       this.$set(this.query, 'pageIndex', val);
       this.getData();
     }
+  },
+  components: {
+    addWorkers
   }
 };
 </script>

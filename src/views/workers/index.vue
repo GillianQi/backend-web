@@ -12,21 +12,26 @@
         ref="multipleTable"
         header-cell-class-name="table-header"
       >
-        <el-table-column prop="userId" label="姓名"></el-table-column>
+        <el-table-column prop="workerName" label="姓名"></el-table-column>
         <el-table-column prop="mobile" label="手机号"></el-table-column>
         <el-table-column prop="idCard" label="身份证号"></el-table-column>
         <el-table-column label="头像" align="center">
           <template slot-scope="scope">
             <el-image
               class="table-td-thumb"
-              :src="scope.row.headImg"
-              :preview-src-list="[scope.row.headImg]"
+              :src="scope.row.avatar"
+              :preview-src-list="[scope.row.avatar]"
             ></el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="workType" label="工种"></el-table-column>
-        <el-table-column prop="workerName" label="工作项目"></el-table-column>
-        <el-table-column prop="authStatus" label="状态"></el-table-column>
+        <el-table-column prop="workTypeDesc" label="工种"></el-table-column>
+        <el-table-column prop="workProgram" label="工作项目"></el-table-column>
+        <el-table-column prop="workStatus" label="工作状态">
+          <template slot-scope="scope">
+            <span v-if="scope.row.workStatus == '1'">在职</span>
+            <span v-else>未在职</span>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -70,33 +75,10 @@ export default {
     return {
       query: {
         workerName: '',
-        workStatus	: '',
         pageIndex: 1,
         pageSize: 10
       },
-      tableData: [
-        {
-          authStatus: 0,
-          headImg: require('@/assets/img/img.jpg'),
-          idCard: "",
-          mobile: "13322255555",
-          userId: 0,
-          workType: "工人",
-          workTypeDesc: "随便",
-          workerName: "哈哈哈哈"
-        },
-        {
-          authStatus: 0,
-          headImg: "",
-          id: 0,
-          idCard: "",
-          mobile: "",
-          userId: 0,
-          workType: "",
-          workTypeDesc: "",
-          workerName: ""
-        }
-      ],
+      tableData: [],
       multipleSelection: [],
       delList: [],
       editVisible: false,
@@ -113,6 +95,9 @@ export default {
     // 获取 easy-mock 的模拟数据
     async getData() {
       const res = await getWorkerListApi(this.query)
+      if (res && res.code === 0) {
+        this.tableData = res.data.list
+      }
       console.log(res)
     },
     // 触发搜索按钮

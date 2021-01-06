@@ -63,6 +63,14 @@ module.exports = {
           '^/salaryInfo': '/salaryInfo'
         }
       },
+      '/common': {
+        target: 'https://admin.jxbanchen.com/',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/common': '/common'
+        }
+      },
     }
   }
 };

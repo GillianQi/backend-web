@@ -12,7 +12,6 @@
         <el-input v-model="query.name" placeholder="顾客姓名" class="handle-input mr10"></el-input>
         <el-input v-model="query.name" placeholder="开票公司名称" class="handle-input mr10"></el-input>
         <el-input v-model="query.name" placeholder="收票公司名称" class="handle-input mr10"></el-input>
-        <el-input v-model="query.name" placeholder="姓名" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
       <el-table
@@ -77,7 +76,7 @@
 </template>
 
 <script>
-import viewInvoice from "./components/view-invoice.vue";
+import viewInvoice from "./components/viewInvoice";
 export default {
   name: "workers",
   components: {
@@ -192,7 +191,7 @@ export default {
 }
 
 .handle-input {
-  width: 300px;
+  width: 200px;
   display: inline-block;
 }
 .table {

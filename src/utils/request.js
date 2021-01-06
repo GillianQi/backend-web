@@ -14,7 +14,16 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     if (response.status === 200) {
-      return response.data;
+      switch (response.data.code) {
+        case -3: case 401:case 1005:
+          localStorage.clear()
+          console.log('--tuichu')
+          this.$router.push('/')
+          break
+        default:
+          return response.data;
+      }
+      
     } else {
       Promise.reject();
     }
@@ -27,7 +36,6 @@ axios.interceptors.response.use(
 
 export function httpGet(url, params) {
   // axios.defaults.timeout = 6000;
-  // axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8';
   const token = localStorage.getItem('token')
   if (token) {
     axios.defaults.headers['access_token'] = token
@@ -43,7 +51,7 @@ export function httpGet(url, params) {
 }
 
 export function httpPost(url, params) {
-  axios.defaults.timeout = 6000;
+  // axios.defaults.timeout = 6000;
   axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
   // axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8';
   const token = localStorage.getItem('token')
@@ -62,6 +70,7 @@ export function httpPost(url, params) {
 
 export function httpPostJSON(url, params) {
   axios.defaults.timeout = 6000;
+  axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8';
   const token = localStorage.getItem('token')
   if (token) {
     axios.defaults.headers['access_token'] = token

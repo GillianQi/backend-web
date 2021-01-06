@@ -55,6 +55,10 @@
 </template>
 
 <script>
+import {
+  getSalaryListApi
+} from '@/api/'
+
 export default {
   name: 'finishsalary',
 
@@ -66,21 +70,7 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      tableData: [
-        {
-          "companyId": 0,
-          "id": 0,
-          "programCompanyName": "公司111",
-          "salaryDate": "2020-11-11",
-          "programName": "工程111",
-          "applyTime": "2020-11-11",
-          "programStartTime": "2020-11-11",
-          "customerName": "hhhh",
-          endTime: '2020-11-11',
-          orderId: 11111111,
-          salaryPic: require('@/assets/img/img.jpg')
-        }
-      ],
+      tableData: [],
       editVisible: false,
       pageTotal: 0,
       form: {},
@@ -92,13 +82,14 @@ export default {
     this.getData();
   },
   methods: {
-    // 获取 easy-mock 的模拟数据
-    getData() {
-      // fetchData(this.query).then(res => {
-      //   console.log(res);
-      //   this.tableData = res.list;
-      //   this.pageTotal = res.pageTotal || 50;
-      // });
+    async getData() {
+      const params = {
+        salaryStatus: '2', // 1:待处理，2：已同意，3：拒绝	
+        page: 0,
+        pageSize: 10
+      }
+      const res = await getSalaryListApi(params)
+      this.tableData = res.list
     },
     // 触发搜索按钮
     handleSearch() {

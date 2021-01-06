@@ -15,10 +15,10 @@ Vue.use(ElementUI, {
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
   // document.title = `${to.meta.title}`;
-  const role = localStorage.getItem('token');
-  if (!role && to.path !== '/login') {
+  const token = localStorage.getItem('token');
+  if (!token && to.path !== '/login') {
     next('/login');
-  } else if (role) {
+  } else if (token) {
     next()
   } else {
     // 简单的判断IE10及以下不进入富文本编辑器，该组件不兼容

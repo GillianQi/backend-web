@@ -55,11 +55,10 @@
     </div>
 
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
+    <el-dialog title="充值" :visible.sync="editVisible" width="30%">
       <el-form ref="form" :model="form" label-width="70px">
         <el-form-item label="公司名称">
-          <!-- <el-input v-model="form.name"></el-input> -->
-          <span>这里是公司名称</span>
+          <span>{{form.companyName}}</span>
         </el-form-item>
         <el-form-item label="充值金额">
           <el-input v-model="form.sum"></el-input>
