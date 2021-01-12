@@ -84,8 +84,7 @@ export default {
     async getData() {
       const res = await getWorkerEmptyApi(this.query)
       if (res && res.code === 0) {
-        this.tableData = res.data.list
-        this.pageTotal = res.data.totalCount
+        this.tableData = res.data
       }
     },
     // 触发搜索按钮
