@@ -6,6 +6,7 @@
         企业名称： <el-input v-model="query.name" placeholder="企业名称" class="handle-input mr10"></el-input>
         工程名称： <el-input v-model="query.name" placeholder="工程名称" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+        <el-button type="primary" @click="handleSubmit">提交</el-button>
       </div>
       <el-table
         :data="tableData"
@@ -13,21 +14,23 @@
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
+        @selection-change="handleSelectionChange"
       >
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="orderId" label="订单编号"></el-table-column>
-        <el-table-column prop="customerName" label="客户名称"></el-table-column>
-        <el-table-column prop="programCompanyName" label="企业名称"></el-table-column>
-        <el-table-column prop="programName" label="工程项目名称"></el-table-column>
+        <el-table-column prop="companyUserName" label="客户名称"></el-table-column>
+        <el-table-column prop="companyName" label="企业名称"></el-table-column>
+        <el-table-column prop="companyWorkInfoName" label="工程项目名称"></el-table-column>
         <el-table-column prop="salaryDate" label="工资日期"></el-table-column>
-        <el-table-column prop="salaryDate" label="预发工资"></el-table-column>
-        <el-table-column prop="salaryDate" label="总发金额"></el-table-column>
-        <el-table-column prop="applyTime" label="申请时间"></el-table-column>
+        <el-table-column prop="preSalary" label="预发工资"></el-table-column>
+        <el-table-column prop="sumSalary" label="总发金额"></el-table-column>
+        <el-table-column prop="createTime" label="申请时间"></el-table-column>
         <el-table-column label="工资表" align="center">
           <template slot-scope="scope">
             <el-image
               class="table-td-thumb"
-              :src="scope.row.salaryPic"
-              :preview-src-list="[scope.row.salaryPic]"
+              :src="scope.row.salaryImg"
+              :preview-src-list="[scope.row.salaryImg]"
             ></el-image>
           </template>
         </el-table-column>
@@ -45,7 +48,7 @@
         <el-pagination
           background
           layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
+          :current-page="query.page"
           :page-size="query.pageSize"
           :total="pageTotal"
           @current-change="handlePageChange"
@@ -57,7 +60,8 @@
 
 <script>
 import {
-  getSalaryListApi
+  getSalaryListApi,
+  submitWorkersSalaryApi
 } from '@/api/'
 export default {
   name: 'workers',
@@ -65,13 +69,12 @@ export default {
   data() {
     return {
       query: {
-        address: '',
-        name: '',
-        pageIndex: 1,
+        salaryStatus: '1', // 1:待处理，2：已同意，3：拒绝
+        page: 1,
         pageSize: 10
       },
-      tableData: [
-      ],
+      tableData: [],
+      multipleSelection: [],
       pageTotal: 0
     };
   },
@@ -80,18 +83,30 @@ export default {
   },
   methods: {
     async getData() {
-      const params = {
-        salaryStatus: '1', // 1:待处理，2：已同意，3：拒绝	
-        page: 0,
-        pageSize: 10
+      const res = await getSalaryListApi(this.query)
+      if (res && res.code == 0) {
+        this.tableData = res.data.list
+        this.pageTotal = res.data.totalCount
       }
-      const res = await getSalaryListApi(params)
-      this.tableData = res.list
     },
     // 触发搜索按钮
     handleSearch() {
-      this.$set(this.query, 'pageIndex', 1);
+      this.$set(this.query, 'page', 1);
       this.getData();
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    async handleSubmit() {
+      if (!this.multipleSelection.length) {
+        this.$message.warning('请至少选中一条');
+        return
+      }
+      let ids = this.multipleSelection.map(item => {
+        return item.id
+      })
+      const res = await submitWorkersSalaryApi({ids: ids.toString()})
+      console.log(res)
     },
     // 编辑操作
     handleEdit(index, row) {
@@ -104,7 +119,7 @@ export default {
     },
     // 分页导航
     handlePageChange(val) {
-      this.$set(this.query, 'pageIndex', val);
+      this.$set(this.query, 'page', val);
       this.getData();
     }
   }

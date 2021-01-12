@@ -23,6 +23,7 @@ module.exports = {
   devServer: {
     port: 8088,
     proxy: {
+      // https://admin.jxbanchen.com/
       '/api': {
         target: 'https://admin.jxbanchen.com/',
         ws: true,

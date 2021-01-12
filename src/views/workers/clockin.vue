@@ -2,9 +2,41 @@
   <div>
     <div class="container">
       <div class="handle-box">
+        <el-select v-model="query.companyId" filterable clearable placeholder="请选择" class="mr10" @change="getProjectList()">
+          <el-option
+            v-for="item in companyList"
+            :key="item.id"
+            :label="item.companyName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+        <el-select v-model="query.workId" filterable clearable placeholder="请选择" class="mr10">
+          <el-option
+            v-for="item in projectList"
+            :key="item.id"
+            :label="item.programName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+        <el-date-picker
+          v-model="query.date"
+          type="date"
+          value-format="yyyy-MM-dd"
+          class="mr10"
+          placeholder="选择日期">
+        </el-date-picker>
         <el-input v-model="query.workerName" placeholder="姓名" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
+      <el-upload
+        class="upload-excel"
+        action="/worker/sign/upload"
+        :before-upload="beforeUpload"
+        :on-success="uploadSuccess"
+        :before-remove="beforeRemove"
+        :file-list="fileList">
+        <el-button size="small" type="primary">点击上传</el-button>
+      </el-upload>
       <el-table
         :data="tableData"
         border
@@ -13,25 +45,13 @@
         header-cell-class-name="table-header"
       >
         <el-table-column prop="workerName" label="姓名"></el-table-column>
-        <el-table-column prop="mobile" label="手机号"></el-table-column>
+        <el-table-column prop="workCompany" label="参加单位"></el-table-column>
+        <el-table-column prop="workGroup" label="班组"></el-table-column>
+        <el-table-column prop="cardNo" label="卡号"></el-table-column>
         <el-table-column prop="idCard" label="身份证号"></el-table-column>
-        <el-table-column label="头像" align="center">
-          <template slot-scope="scope">
-            <el-image
-              class="table-td-thumb"
-              :src="scope.row.avatar"
-              :preview-src-list="[scope.row.avatar]"
-            ></el-image>
-          </template>
-        </el-table-column>
-        <el-table-column prop="workTypeDesc" label="工种"></el-table-column>
-        <el-table-column prop="workProgram" label="工作项目"></el-table-column>
-        <el-table-column prop="workStatus" label="工作状态">
-          <template slot-scope="scope">
-            <span v-if="scope.row.workStatus == '1'">在职</span>
-            <span v-else>未在职</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="channel" label="通道"></el-table-column>
+        <el-table-column prop="signType" label="进/出"></el-table-column>
+        <el-table-column prop="signTime" label="考勤日期"></el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -65,7 +85,10 @@
 
 <script>
 import {
-  getWorkerListApi
+  getWorkerClockinApi,
+  getCompanyList,
+  getProjectListApi,
+  importWorkersSignApi
 } from '@/api/'
 
 export default {
@@ -74,11 +97,17 @@ export default {
   data() {
     return {
       query: {
+        companyId: '',
+        workId: '',
+        date: '',
         workerName: '',
         page: 0,
-        pageSize: 10
+        pageSize: 10,
       },
+      fileList: [],
       tableData: [],
+      companyList: [],
+      projectList: [],
       multipleSelection: [],
       delList: [],
       editVisible: false,
@@ -90,16 +119,34 @@ export default {
   },
   created() {
     this.getData();
+    this.getCompanyList();
   },
   methods: {
-    // 获取 easy-mock 的模拟数据
     async getData() {
-      const res = await getWorkerListApi(this.query)
+      const res = await getWorkerClockinApi(this.query)
       if (res && res.code === 0) {
         this.tableData = res.data.list
         this.pageTotal = res.data.totalCount
       }
-      console.log(res)
+    },
+    async getCompanyList() {
+      const query = {
+        authStatus: '2',
+        page: 1,
+        pageSize: 9999
+      }
+      const res = await getCompanyList(query)
+      this.companyList = res.list
+      this.getProjectList()
+    },
+    async getProjectList() {
+      const query = {
+        companyId: this.query.companyId,
+        page: 1,
+        pageSize: 9999
+      }
+      const res = await getProjectListApi(query)
+      this.projectList = res.data.list
     },
     // 触发搜索按钮
     handleSearch() {
@@ -148,12 +195,30 @@ export default {
     handlePageChange(val) {
       this.$set(this.query, 'page', val);
       this.getData();
+    },
+    beforeUpload(file) {
+      this.uploadFile(file)
+    },
+    uploadFile(file){
+      var formData = new FormData();
+      formData.append('companyId', this.query.companyId);
+      formData.append('workId',this.query.workId);
+      formData.append('file',file);
+      importWorkersSignApi(formData)
+    },
+    uploadSuccess() {
+      this.query.workerName = ''
+      this.query.date = ''
+      this.getData()
+    },
+    beforeRemove(file) {
+      return this.$confirm(`确定移除 ${ file.name }？`);
     }
   }
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .handle-box {
   margin-bottom: 20px;
 }
@@ -162,8 +227,19 @@ export default {
   width: 120px;
 }
 
+.upload-excel {
+  margin: 20px 0;
+  width: 40%;
+
+  /deep/ .el-upload--text {
+    height: inherit;
+    border: none;
+    display: inline;
+  }
+}
+
 .handle-input {
-  width: 300px;
+  width: 200px;
   display: inline-block;
 }
 .table {

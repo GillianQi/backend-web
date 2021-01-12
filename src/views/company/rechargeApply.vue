@@ -25,13 +25,11 @@
             <span v-if="applyStatus === '1'">
               <el-button
                 type="text"
-                icon="el-icon-edit"
-                @click="authCompany(scope.$index, scope.row)"
+                @click="handleAuth(scope.row, 1)"
               >同意</el-button>
               <el-button
                 type="text"
-                icon="el-icon-edit"
-                @click="authCompany(scope.$index, scope.row)"
+                @click="handleAuth(scope.row, 0)"
               >驳回</el-button>
             </span>
             <span v-else></span>
@@ -42,7 +40,7 @@
         <el-pagination
           background
           layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
+          :current-page="query.page"
           :page-size="query.pageSize"
           :total="pageTotal"
           @current-change="handlePageChange"
@@ -66,7 +64,8 @@
 
 <script>
 import {
-  rechargeApplyListApi
+  rechargeApplyListApi,
+  handleApplyOptionApi
 } from '@/api/'
 
 export default {
@@ -74,9 +73,8 @@ export default {
   data() {
     return {
       query: {
-        address: '',
-        name: '',
-        pageIndex: 1,
+        authStatus: '0',
+        page: 1,
         pageSize: 10
       },
       tableData: [
@@ -93,17 +91,13 @@ export default {
   },
   methods: {
     async getData() {
-      const params = {
-        authStatus: '0',
-        page: 0,
-        pageSize: 10
-      }
-      const res = await rechargeApplyListApi(params)
+      const res = await rechargeApplyListApi(this.query)
       this.tableData = res.list
+      this.pageTotal = res.totalCount
     },
     // 触发搜索按钮
     handleSearch() {
-      this.$set(this.query, 'pageIndex', 1);
+      this.$set(this.query, 'page', 1);
       this.getData();
     },
     // 删除操作
@@ -118,27 +112,20 @@ export default {
         })
         .catch(() => {});
     },
-    // 查看工程列表
-    viewEngineerList(index, row) {
-      // this.idx = index;
-      // this.form = row;
-      // this.editVisible = true;
-      this.$router.push({
-        path: '/company-engineer',
-        query: {
-          id: row.id
-        }
-      })
-    },
-    // 编辑操作
-    authCompany(index, row) {
-      this.idx = index;
-      this.form = row;
-      this.editVisible = true;
+    async handleAuth(row, type) {
+      // option 1:通过，0：拒绝
+      const res = await handleApplyOptionApi({id: row.id, companyId: row.companyId, option: type})
+      if (res && res.code === 0) {
+        this.$message.success('操作成功');
+        this.editVisible = false;
+        this.getData()
+      } else {
+        this.$message.error('认证失败')
+      }
     },
     // 分页导航
     handlePageChange(val) {
-      this.$set(this.query, 'pageIndex', val);
+      this.$set(this.query, 'page', val);
       this.getData();
     }
   }

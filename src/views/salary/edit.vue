@@ -2,10 +2,19 @@
   <div>
     <div class="container">
       <div class="handle-box">
-        姓名：<el-input v-model="query.name" placeholder="姓名" class="handle-input mr10"></el-input>
-        身份证号： <el-input v-model="query.name" placeholder="身份证号" class="handle-input mr10"></el-input>
-        手机号： <el-input v-model="query.name" placeholder="手机号" class="handle-input mr10"></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+        姓名：<el-input v-model="query.userName" placeholder="姓名" class="handle-input mr10"></el-input>
+        身份证号： <el-input v-model="query.idCard" placeholder="身份证号" class="handle-input mr10"></el-input>
+        手机号： <el-input v-model="query.mobile" placeholder="手机号" class="handle-input mr10"></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="getData()">搜索</el-button>
+        <el-upload
+          class="upload-excel"
+          action="/salaryInfo/batchInsertSalary"
+          :before-upload="beforeUpload"
+          :on-success="uploadSuccess"
+          :before-remove="beforeRemove"
+          :file-list="fileList">
+          <el-button size="small" type="primary">点击上传</el-button>
+      </el-upload>
       </div>
       <el-table
         :data="tableData"
@@ -15,21 +24,30 @@
         header-cell-class-name="table-header"
       >
         <el-table-column prop="programName" label="工程项目名称"></el-table-column>
-        <el-table-column prop="programName" label="编号"></el-table-column>
-        <el-table-column prop="programStartTime" label="姓名"></el-table-column>
+        <el-table-column prop="orderNum" label="编号"></el-table-column>
+        <el-table-column prop="userName" label="姓名"></el-table-column>
         <el-table-column prop="programEndTime" label="工种"></el-table-column>
-        <el-table-column prop="programRealEndTime" label="身份证号"></el-table-column>
+        <el-table-column prop="idCard" label="身份证号"></el-table-column>
         <el-table-column prop="updateUser" label="出勤天数"></el-table-column>
-        <el-table-column prop="updateUser" label="手机号"></el-table-column>
-        <el-table-column prop="updateUser" label="银行卡号"></el-table-column>
-        <el-table-column prop="updateUser" label="工资月份"></el-table-column>
-        <el-table-column prop="updateUser" label="工资金额（元）"></el-table-column>
+        <el-table-column prop="mobile" label="手机号"></el-table-column>
+        <el-table-column prop="bankCard" label="银行卡号"></el-table-column>
+        <el-table-column prop="salaryDate" label="工资月份"></el-table-column>
+        <el-table-column prop="salary" label="工资金额（元）"></el-table-column>
+        <el-table-column label="操作" width="80" align="center">
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              icon="el-icon-edit"
+              @click="handleEdit(scope.$index, scope.row)"
+            >编辑</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
           background
           layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
+          :current-page="query.page"
           :page-size="query.pageSize"
           :total="pageTotal"
           @current-change="handlePageChange"
@@ -41,10 +59,13 @@
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
       <el-form ref="form" :model="form" label-width="70px">
         <el-form-item label="姓名">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.userName"></el-input>
         </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
+        <el-form-item label="身份证">
+          <el-input v-model="form.idCard"></el-input>
+        </el-form-item>
+        <el-form-item label="金额">
+          <el-input v-model="form.salary"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -56,50 +77,25 @@
 </template>
 
 <script>
+import {
+  getSalaryDetailApi,
+  updateSalaryDetailApi,
+  importWorkersSalaryApi
+} from '@/api/'
 export default {
   name: 'engineer',
   data() {
     return {
       query: {
-        address: '',
-        name: '',
-        pageIndex: 1,
+        salaryMainId: this.$route.query.id,
+        userName: '',
+        idCard: '',
+        mobile: '',
+        page: 1,
         pageSize: 10
       },
-      tableData: [
-        {
-          "companyId": 0,
-          "createTime": "",
-          "createUser": 0,
-          "descript": "",
-          "id": 0,
-          "programCompanyName": "公司111",
-          "programEndTime": "2020-11-11",
-          "programName": "工程111",
-          "programRealEndTime": "2020-11-11",
-          "programStartTime": "2020-11-11",
-          "programStatus": "0",
-          "status": 0,
-          "updateTime": "",
-          "updateUser": 0
-        },
-        {
-          "companyId": 0,
-          "createTime": "",
-          "createUser": 0,
-          "descript": "",
-          "id": 0,
-          "programCompanyName": "公司111",
-          "programEndTime": "2020-11-11",
-          "programName": "工程222",
-          "programRealEndTime": "2020-11-11",
-          "programStartTime": "2020-11-11",
-          "programStatus": "1",
-          "status": 0,
-          "updateTime": "",
-          "updateUser": 0
-        }
-      ],
+      tableData: [],
+      fileList: [],
       delList: [],
       editVisible: false,
       pageTotal: 0,
@@ -112,13 +108,9 @@ export default {
     this.getData();
   },
   methods: {
-    // 获取 easy-mock 的模拟数据
-    getData() {
-      // fetchData(this.query).then(res => {
-      //   console.log(res);
-      //   this.tableData = res.list;
-      //   this.pageTotal = res.pageTotal || 50;
-      // });
+    async getData() {
+      const res = await getSalaryDetailApi(this.query)
+      this.tableData = res.data.list
     },
     // 删除操作
     addWorkers(index, row) {
@@ -126,28 +118,71 @@ export default {
       this.form = row;
       this.editVisible = true;
     },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    handleSubmit() {
+      if (!this.multipleSelection.length) {
+        this.$message.warning('请至少选中一条');
+        return
+      }
+      let ids = this.multipleSelection.map(item => {
+        return item.userId
+      })
+      console.log(this.multipleSelection, ids)
+    },
     // 编辑操作
-    editEngineer(index, row) {
+    handleEdit(index, row) {
       this.idx = index;
       this.form = row;
       this.editVisible = true;
     },
     // 保存编辑
-    saveEdit() {
+    async saveEdit() {
       this.editVisible = false;
-      this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-      this.$set(this.tableData, this.idx, this.form);
+      const params = {
+        bankCard: this.form.bankCard,
+        bankFullName: this.form.bankFullName,
+        bankName: this.form.bankName,
+        id: this.form.id,
+        mobile: this.form.mobile,
+        property: this.form.property,
+        salary: this.form.salary
+      }
+      const res = await updateSalaryDetailApi(params)
+      if (res && res.code === 0) {
+        this.form = {}
+        this.$message.success('修改成功')
+        this.editVisible = false
+      }
     },
     // 分页导航
     handlePageChange(val) {
-      this.$set(this.query, 'pageIndex', val);
+      this.$set(this.query, 'page', val);
       this.getData();
+    },
+    beforeUpload(file) {
+      this.uploadFile(file)
+    },
+    uploadFile(file){
+      var formData = new FormData();
+      formData.append('programId', this.$route.query.id);
+      formData.append('file',file);
+      importWorkersSalaryApi(formData)
+    },
+    uploadSuccess() {
+      this.query.userName = ''
+      this.query.idCard = ''
+      this.query.mobile = ''
+      this.getData()
+    },
+    beforeRemove(file) {
+      return this.$confirm(`确定移除 ${ file.name }？`);
     }
   }
 };
 </script>
-
-<style scoped>
+<style scoped lang="scss">
 .handle-box {
   margin-bottom: 20px;
 }
@@ -156,8 +191,22 @@ export default {
   width: 120px;
 }
 
+.upload-excel {
+  // display: inline;
+  margin-top: 20px;
+
+  /deep/ .el-upload--text {
+    height: inherit;
+    border: none;
+    display: inline;
+  }
+}
 .handle-input {
   width: 200px;
+  display: inline-block;
+}
+.table-input {
+  width: 100px;
   display: inline-block;
 }
 .table {

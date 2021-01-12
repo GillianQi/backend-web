@@ -2,7 +2,7 @@
   <div>
     <div class="container">
       <div class="handle-box">
-        <el-button type="primary" icon="el-icon-plus" @click="handleAddWorkers">添加</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="handleRemoveWorkers">删除</el-button>
       </div>
       <el-table
         :data="tableData"
@@ -13,24 +13,13 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="workerName" label="姓名"></el-table-column>
-        <el-table-column prop="mobile" label="手机号"></el-table-column>
-        <el-table-column prop="idCard" label="身份证号"></el-table-column>
-        <el-table-column label="头像" align="center">
+        <el-table-column prop="userName" label="姓名"></el-table-column>
+        <el-table-column prop="startTime" label="开始时间"></el-table-column>
+        <el-table-column prop="workType" label="工种"></el-table-column>
+        <el-table-column prop="relateStatus" label="工作状态">
           <template slot-scope="scope">
-            <el-image
-              class="table-td-thumb"
-              :src="scope.row.avatar"
-              :preview-src-list="[scope.row.avatar]"
-            ></el-image>
-          </template>
-        </el-table-column>
-        <el-table-column prop="workTypeDesc" label="工种"></el-table-column>
-        <el-table-column prop="workProgram" label="工作项目"></el-table-column>
-        <el-table-column prop="workStatus" label="状态">
-           <template slot-scope="scope">
-            <span v-if="scope.row.workStatus == '1'">在职</span>
-            <span v-else>未在职</span>
+            <span v-if="scope.row.relateStatus == '1'">工程中</span>
+            <span v-else>已剔除</span>
           </template>
         </el-table-column>
       </el-table>
@@ -51,7 +40,7 @@
 <script>
 import {
   getWorkerEmptyApi,
-  assignWorkersApi
+  removeWorkerdApi
 } from '@/api/'
 
 export default {
@@ -60,13 +49,17 @@ export default {
     programId: {
       type: Number,
       default: null
+    },
+    viewForm: {
+      type: Object,
+      default: null
     }
   },
   data() {
     return {
       query: {
-        workerName: '',
-        workStatus	: '',
+        companyId: this.viewForm.companyId,
+        programId:  this.viewForm.id,
         page: 1,
         pageSize: 10
       },
@@ -88,12 +81,8 @@ export default {
         this.pageTotal = res.data.totalCount
       }
     },
-    // 触发搜索按钮
-    handleSearch() {
-      this.$set(this.query, 'page', 1);
-      this.getData();
-    },
-    async handleAddWorkers() {
+    async handleRemoveWorkers() {
+      console.log(this.multipleSelection)
       if (!this.multipleSelection.length) {
         this.$message.warning('请至少选中一条');
         return
@@ -101,12 +90,11 @@ export default {
       let ids = this.multipleSelection.map(item => {
         return item.userId
       })
-      console.log(ids)
       const params = {
         programId: this.programId,
         userIds: ids.toString()
       }
-      const res = await assignWorkersApi(params)
+      const res = await removeWorkerdApi(params)
       if (res && res.code == 0) {
         this.$emit('close')
       }

@@ -31,7 +31,7 @@
         <el-pagination
           background
           layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
+          :current-page="query.page"
           :page-size="query.pageSize"
           :total="pageTotal"
           @current-change="handlePageChange"
@@ -51,9 +51,8 @@ export default {
   data() {
     return {
       query: {
-        address: '',
-        name: '',
-        pageIndex: 1,
+        companyId: this.$route.query.id,
+        page: 1,
         pageSize: 10
       },
       tableData: [
@@ -70,20 +69,15 @@ export default {
   },
   methods: {
     async getData() {
-      const params = {
-        companyId: this.$route.query.id,
-        page: 0,
-        pageSize: 10
-      }
-      console.log(params)
-      const res = await rechargeHistoryListApi(params)
+      const res = await rechargeHistoryListApi(this.query)
       if (res && res.code === 0) {
         this.tableData = res.data.list
+        this.pageTotal = res.data.totalCount
       }
     },
     // 分页导航
     handlePageChange(val) {
-      this.$set(this.query, 'pageIndex', val);
+      this.$set(this.query, 'page', val);
       this.getData();
     }
   }

@@ -20,6 +20,11 @@ export default new Router({
           meta: { title: '工人管理' }
         },
         {
+          path: '/workers-clock',
+          component: () => import('@/views/workers/clockin.vue'),
+          meta: { title: '打卡记录' }
+        },
+        {
           path: '/company',
           component: () => import('@/views/company/index.vue'),
           meta: { title: '施工单位管理' }

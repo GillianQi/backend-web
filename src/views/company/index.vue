@@ -26,9 +26,12 @@
           <template slot-scope="scope">
             <el-button
               type="text"
-              icon="el-icon-edit"
-              @click="authCompany(scope.$index, scope.row)"
-            >认证</el-button>
+              @click="handleAuth(scope.row, 1)"
+            >同意</el-button>
+            <el-button
+              type="text"
+              @click="handleAuth(scope.row, 2)"
+            >拒绝</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -36,7 +39,7 @@
         <el-pagination
           background
           layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
+          :current-page="query.page"
           :page-size="query.pageSize"
           :total="pageTotal"
           @current-change="handlePageChange"
@@ -69,9 +72,7 @@ export default {
   data() {
     return {
       query: {
-        address: '',
-        name: '',
-        pageIndex: 1,
+        page: 0,
         pageSize: 10
       },
       tableData: [
@@ -90,15 +91,18 @@ export default {
     async getData() {
       const params = {
         authStatus: '0',
-        page: 0,
+        page: 1,
         pageSize: 10
       }
       const res = await getCompanyList(params)
-      this.tableData = res.list
+      if (res) {
+        this.tableData = res.list
+        this.pageTotal = res.totalCount
+      }
     },
     // 触发搜索按钮
     handleSearch() {
-      this.$set(this.query, 'pageIndex', 1);
+      this.$set(this.query, 'page', 1);
       this.getData();
     },
     // 删除操作
@@ -115,9 +119,6 @@ export default {
     },
     // 查看工程列表
     viewEngineerList(index, row) {
-      // this.idx = index;
-      // this.form = row;
-      // this.editVisible = true;
       this.$router.push({
         path: '/company-engineer',
         query: {
@@ -125,25 +126,20 @@ export default {
         }
       })
     },
-    // 编辑操作
-    authCompany(index, row) {
-      this.idx = index;
-      this.form = row;
-      this.editVisible = true;
-    },
     // 保存编辑
-    async handleAuth(type) {
-      const res = await handleAuthApi({companyId: this.form.id, flag: type})
+    async handleAuth(row, type) {
+      const res = await handleAuthApi({companyId: row.id, flag: type})
       if (res && res.code === 0) {
-        this.$message.success('认证成功');
+        this.$message.success('操作成功');
         this.editVisible = false;
+        this.getData()
       } else {
         this.$message.error('认证失败')
       }
     },
     // 分页导航
     handlePageChange(val) {
-      this.$set(this.query, 'pageIndex', val);
+      this.$set(this.query, 'page', val);
       this.getData();
     }
   }

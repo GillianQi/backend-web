@@ -59,7 +59,17 @@ export default {
         {
           icon: 'el-icon-s-home',
           index: 'workers',
-          title: '工人管理'
+          title: '工人管理',
+          subs: [
+            {
+              index: 'workers',
+              title: '工人列表'
+            },
+            {
+              index: 'workers-clock',
+              title: '打卡记录'
+            }
+          ]
         },
         {
           icon: 'el-icon-office-building',

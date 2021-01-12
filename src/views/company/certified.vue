@@ -26,11 +26,6 @@
           <template slot-scope="scope">
             <el-button
               type="text"
-              icon="el-icon-edit"
-              @click="authCompany(scope.$index, scope.row)"
-            >充值</el-button>
-            <el-button
-              type="text"
               icon="el-icon-view"
               @click="viewEngineerList(scope.$index, scope.row)"
             >项目列表</el-button>
@@ -46,7 +41,7 @@
         <el-pagination
           background
           layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
+          :current-page="query.page"
           :page-size="query.pageSize"
           :total="pageTotal"
           @current-change="handlePageChange"
@@ -82,9 +77,8 @@ export default {
   data() {
     return {
       query: {
-        address: '',
-        name: '',
-        pageIndex: 1,
+        authStatus: '2',
+        page: 1,
         pageSize: 10
       },
       tableData: [],
@@ -100,17 +94,13 @@ export default {
   },
   methods: {
     async getData() {
-      const params = {
-        authStatus: '2',
-        page: 0,
-        pageSize: 10
-      }
-      const res = await getCompanyList(params)
+      const res = await getCompanyList(this.query)
       this.tableData = res.list
+      this.pageTotal = res.totalCount
     },
     // 触发搜索按钮
     handleSearch() {
-      this.$set(this.query, 'pageIndex', 1);
+      this.$set(this.query, 'page', 1);
       this.getData();
     },
     // 删除操作
@@ -142,12 +132,6 @@ export default {
         }
       })
     },
-    // 编辑操作
-    authCompany(index, row) {
-      this.idx = index;
-      this.form = row;
-      this.editVisible = true;
-    },
     // 保存编辑
     saveEdit() {
       this.editVisible = false;
@@ -156,7 +140,7 @@ export default {
     },
     // 分页导航
     handlePageChange(val) {
-      this.$set(this.query, 'pageIndex', val);
+      this.$set(this.query, 'page', val);
       this.getData();
     }
   }

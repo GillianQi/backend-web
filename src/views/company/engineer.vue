@@ -31,6 +31,11 @@
               icon="el-icon-plus"
               @click="addWorkers(scope.$index, scope.row)"
             >添加工人</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-view"
+              @click="viewWorkers(scope.$index, scope.row)"
+            >查看工人</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -38,7 +43,7 @@
         <el-pagination
           background
           layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
+          :current-page="query.page"
           :page-size="query.pageSize"
           :total="pageTotal"
           @current-change="handlePageChange"
@@ -48,7 +53,11 @@
 
     <!-- 编辑弹出框 -->
     <el-dialog title="添加工人" :visible.sync="editVisible" width="80%">
-      <add-workers :programId="id" @close="closeAddWorkers"></add-workers>
+      <add-workers v-if="editVisible" :programId="id" @close="closeAddWorkers"></add-workers>
+    </el-dialog>
+
+     <el-dialog title="查看工人" :visible.sync="viewVisible" width="80%">
+      <view-workers v-if="viewVisible" :programId="viewId" :viewForm="viewForm" @close="closeViewWorkers"></view-workers>
     </el-dialog>
   </div>
 </template>
@@ -58,25 +67,27 @@ import {
   getProjectListApi
 } from '@/api/'
 import addWorkers from './components/addWorker'
+import viewWorkers from './components/viewWorkers'
 
 export default {
   name: 'engineer',
   data() {
     return {
       query: {
-        address: '',
-        name: '',
-        pageIndex: 1,
+        companyId: this.$route.query.id,
+        page: 1,
         pageSize: 10
       },
-      isShowAddWorker: false,
       tableData: [{}],
       delList: [],
       editVisible: false,
+      viewVisible: false,
+      viewForm: {},
       pageTotal: 0,
       form: {},
       idx: -1,
-      id: -1
+      id: -1,
+      viewId: -1
     };
   },
   created() {
@@ -84,13 +95,9 @@ export default {
   },
   methods: {
     async getData() {
-      const params = {
-        companyId: this.$route.query.id,
-        page: 0,
-        pageSize: 10
-      }
-      const res = await getProjectListApi(params)
-      console.log(res)
+      const res = await getProjectListApi(this.query)
+      this.tableData = res.data.list
+      this.pageTotal = res.data.list
     },
     // 操作
     addWorkers(index, row) {
@@ -104,6 +111,15 @@ export default {
       this.idx = 0;
       this.form = {};
       this.editVisible = false
+    },
+    closeViewWorkers() {
+      this.viewId = ''
+      this.viewVisible = false
+    },
+    viewWorkers(index, row) {
+      this.viewForm = row;
+      this.viewId = row.id
+      this.viewVisible = true;
     },
     // 编辑操作
     editEngineer(index, row) {
@@ -119,12 +135,13 @@ export default {
     },
     // 分页导航
     handlePageChange(val) {
-      this.$set(this.query, 'pageIndex', val);
+      this.$set(this.query, 'page', val);
       this.getData();
     }
   },
   components: {
-    addWorkers
+    addWorkers,
+    viewWorkers
   }
 };
 </script>

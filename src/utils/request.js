@@ -84,3 +84,20 @@ export function httpPostJSON(url, params) {
       }
   })
 }
+
+export function httpUpload(url, params) {
+  axios.defaults.timeout = 6000;
+  axios.defaults.headers['Content-Type'] = 'multipart/form-data;charset=UTF-8';
+  const token = localStorage.getItem('token')
+  if (token) {
+    axios.defaults.headers['access_token'] = token
+  }
+  return new Promise((resolve, reject) => {
+    axios.post(url, params)
+      .then(res => {
+        resolve(res)
+      }), error => {
+        reject(error)
+      }
+  })
+}
