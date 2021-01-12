@@ -39,7 +39,7 @@
 
 <script>
 import {
-  getWorkerEmptyApi,
+  getWorkersByProjectApi,
   removeWorkerdApi
 } from '@/api/'
 
@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     async getData() {
-      const res = await getWorkerEmptyApi(this.query)
+      const res = await getWorkersByProjectApi(this.query)
       if (res && res.code === 0) {
         this.tableData = res.data.list
         this.pageTotal = res.data.totalCount
