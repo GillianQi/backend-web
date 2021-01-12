@@ -26,9 +26,9 @@
         <el-table-column prop="programName" label="工程项目名称"></el-table-column>
         <el-table-column prop="orderNum" label="编号"></el-table-column>
         <el-table-column prop="userName" label="姓名"></el-table-column>
-        <el-table-column prop="programEndTime" label="工种"></el-table-column>
+        <el-table-column prop="workType" label="工种"></el-table-column>
         <el-table-column prop="idCard" label="身份证号"></el-table-column>
-        <el-table-column prop="updateUser" label="出勤天数"></el-table-column>
+        <el-table-column prop="signDate" label="出勤天数"></el-table-column>
         <el-table-column prop="mobile" label="手机号"></el-table-column>
         <el-table-column prop="bankCard" label="银行卡号"></el-table-column>
         <el-table-column prop="salaryDate" label="工资月份"></el-table-column>
