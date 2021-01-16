@@ -17,7 +17,8 @@ axios.interceptors.response.use(
   response => {
     if (response.status === 200) {
       switch (response.data.code) {
-        case -3: case 401:case 1005:
+        case -1: case -2 :case -3: case 401 :case 1002: case 1003: case 1004: case 1005: case 1006:
+        case 1007: case 1008: case 1009:
           localStorage.clear()
           router.push('/')
           Message.warning({message: response.data.message})
