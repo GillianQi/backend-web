@@ -108,7 +108,37 @@ export default {
         {
           icon: 'el-icon-receiving',
           index: 'invoice',
-          title: '发票管理'
+          title: '发票管理',
+          subs: [
+            {
+              index: 'invoice',
+              title: '待处理',
+              subs: [
+                {
+                  index: 'invoice',
+                  title: '增税票'
+                },
+                {
+                  index: 'invoice-special',
+                  title: '服务票'
+                },
+              ]
+            },
+            {
+              index: 'invoice-finish',
+              title: '已完成',
+              subs: [
+                {
+                  index: 'invoice-finish',
+                  title: '增税票'
+                },
+                {
+                  index: 'invoice-finish-special',
+                  title: '服务票'
+                },
+              ]
+            },
+          ]
         }
       ]
     };

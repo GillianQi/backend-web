@@ -94,7 +94,7 @@ export default {
         billType: '',
         collectionCompanyName: '',
         customerName: '',
-        invoiceStatus: '0',
+        invoiceStatus: '1',
         invoiceType: '1',
         pageIndex: 1,
         pageSize: 10

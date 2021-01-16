@@ -2,13 +2,13 @@
   <div>
     <div class="title-head-warp">
       <div class="title-head-desc-warp">
-        <div class="desc-font">增值税普通发票</div>
+        <div class="desc-font">{{ row.billType === '2' ? '增值税普通发票' : '增值税专用发票'}}</div>
         <div class="split-line"></div>
         <div class="title-font">发票联</div>
       </div>
       <div class="title-head-date-warp">
         <span class="desc-font">申请日期：</span>
-        <span class="title-font">2020-12-30</span>
+        <span class="title-font">{{detail.createTime}}</span>
       </div>
     </div>
     <div class="body-warp">
@@ -19,19 +19,19 @@
         <div style="flex: 5;" class="table-column-div-right">
           <div class="table-row table-row-div-bottom">
             <div class="table-title table-column-div-right">名&nbsp; &nbsp; &nbsp; &nbsp;称:</div>
-            <div class="table-desc">陕西迎合梳理公司</div>
+            <div class="table-desc">{{detail.companyName}}</div>
           </div>
           <div class="table-row table-row table-row-div-bottom">
             <div class="table-title table-column-div-right">纳税人识别号:</div>
-            <div class="table-desc">陕西迎合梳理公司</div>
+            <div class="table-desc">{{detail.taxpayerNum}}</div>
           </div>
           <div class="table-row table-row-div-bottom">
             <div class="table-title table-column-div-right">地址-电话:</div>
-            <div class="table-desc">陕西迎合梳理公司</div>
+            <div class="table-desc">{{detail.companyAddMobile}}</div>
           </div>
           <div class="table-row table-row-div-bottom">
             <div class="table-title table-column-div-right">开户行及账号:</div>
-            <div class="table-desc">陕西迎合梳理公司</div>
+            <div class="table-desc">{{detail.bankNameAccount}}</div>
           </div>
         </div>
         <div class="table-columns title-font table-row-div-bottom table-column-div-right">
@@ -40,15 +40,15 @@
         <div style="flex: 3;">
           <div class="table-row table-row-div-bottom">
             <div class="table-title table-column-div-right">收件人姓名:</div>
-            <div class="table-desc">陕西迎合梳理公司</div>
+            <div class="table-desc">{{detail.billConsignee}}</div>
           </div>
           <div class="table-row table-row-div-bottom">
             <div class="table-title table-column-div-right">收件人手机号:</div>
-            <div class="table-desc">陕西迎合梳理公司</div>
+            <div class="table-desc">{{detail.billPhone}}</div>
           </div>
           <div class="table-row table-row-div-bottom">
             <div class="table-title table-column-div-right">收件人地址:</div>
-            <div class="table-desc">陕西迎合梳理公司</div>
+            <div class="table-desc">{{detail.billAddress}}</div>
           </div>
           <div class="table-row table-row-div-bottom">
             <div class="table-title table-column-div-right"></div>
@@ -69,7 +69,7 @@
             style="flex: 1; justify-content: center; "
             class="table-title table-column-div-right"
           >建筑服务*工程款</div>
-          <div style="flex: 1; justify-content: center;" class="table-desc">200000</div>
+          <div style="flex: 1; justify-content: center;" class="table-desc">{{detail.serviceRate}}</div>
         </div>
         <div class="table-row table-row-div-bottom">
           <div
@@ -80,10 +80,10 @@
             <div
               style="flex: 1; align-self: stretch;"
               class="table-desc table-column-div-right"
-            >4564654654</div>
+            >{{detail.accountNumStr}}</div>
             <div style="flex: 1; display: flex;" class="title-font">
               （小写）
-              <span class="table-desc">200000</span>
+              <span class="table-desc">{{detail.accountNum}}</span>
             </div>
           </div>
         </div>
@@ -95,32 +95,64 @@
         <div style="flex: 5;" class="table-column-div-right">
           <div class="table-row table-row-div-bottom">
             <div class="table-title table-column-div-right">名&nbsp; &nbsp; &nbsp; &nbsp;称:</div>
-            <div class="table-desc">陕西迎合梳理公司</div>
+            <div class="table-desc">{{detail.companyName1}}</div>
           </div>
           <div class="table-row table-row table-row-div-bottom">
             <div class="table-title table-column-div-right">纳税人识别号:</div>
-            <div class="table-desc">陕西迎合梳理公司</div>
+            <div class="table-desc">{{detail.taxpayerNum1}}</div>
           </div>
           <div class="table-row table-row-div-bottom">
             <div class="table-title table-column-div-right">地址-电话:</div>
-            <div class="table-desc">陕西迎合梳理公司</div>
+            <div class="table-desc">{{detail.companyAddMobile1}}</div>
           </div>
           <div class="table-row table-row-div-bottom">
             <div class="table-title table-column-div-right">开户行及账号:</div>
-            <div class="table-desc">陕西迎合梳理公司</div>
+            <div class="table-desc">{{detail.bankNameAccount1}}</div>
           </div>
         </div>
         <div class="table-columns title-font table-row-div-bottom table-column-div-right">
           <div class="table-text-vertical">备注</div>
         </div>
-        <div style="flex: 3;" class="table-row-div-bottom">sssssss</div>
+        <div style="flex: 3;" class="table-row-div-bottom">{{detail.descript}}</div>
+      </div>
+    </div>
+    <div v-if="detail.invoiceStatus == 0" class="body-ope">
+      <div style="display: flex;align-items: center;">
+        <div class="body-ope-button" @click="finish">完成</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import {
+  finishInvoiceApproveApi
+} from '@/api/'
+
+export default {
+  props: {
+    row: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
+    detail: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
+  },
+  methods: {
+    async finish() {
+      const res = await finishInvoiceApproveApi({mainId: this.detail.mainId})
+      if (res && res.code == 0) {
+        this.$emit('success')
+      }
+    }
+  }
+};
 </script>
 
 <style>
@@ -162,6 +194,7 @@ export default {};
   font-size: 12px;
   margin: 0 2px;
   color: #fff;
+  cursor: pointer;
 }
 
 .desc-font {

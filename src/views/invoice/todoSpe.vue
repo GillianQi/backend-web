@@ -5,8 +5,8 @@
         <label for="">发票类型:</label>
         <el-radio-group v-model="query.billType">
           <el-radio label="">全部</el-radio>
-          <el-radio label="2">增值税普票</el-radio>
-          <el-radio label="1">增值税专票</el-radio>
+          <el-radio label="2">普通发票</el-radio>
+          <el-radio label="1">专用发票</el-radio>
         </el-radio-group>
       </div>
       <div class="handle-box">
@@ -95,7 +95,7 @@ export default {
         collectionCompanyName: '',
         customerName: '',
         invoiceStatus: '0',
-        invoiceType: '1',
+        invoiceType: '2',
         pageIndex: 1,
         pageSize: 10
       },

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import qs from 'qs'
+import router from '../router'
+import { Message } from 'element-ui';
 
 axios.interceptors.request.use(
   config => {
@@ -17,14 +19,14 @@ axios.interceptors.response.use(
       switch (response.data.code) {
         case -3: case 401:case 1005:
           localStorage.clear()
-          console.log('--tuichu')
-          this.$router.push('/')
+          router.push('/')
+          Message.warning({message: response.data.message})
           break
         default:
           return response.data;
       }
-      
     } else {
+      Message.warning({message: '服务器内部错误'})
       Promise.reject();
     }
   },

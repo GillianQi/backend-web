@@ -70,8 +70,16 @@ module.exports = {
         changeOrigin: true,
         pathRewrite: {
           '^/common': '/common'
-        }
+        },
       },
+      '/invoiceMainPO': {
+        target: 'https://admin.jxbanchen.com/',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/invoiceMainPO': '/invoiceMainPO'
+        },
+      }
     }
   }
 };

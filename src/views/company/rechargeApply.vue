@@ -9,7 +9,7 @@
         header-cell-class-name="table-header">
         <el-table-column prop="userName" label="用户认证姓名"></el-table-column>
         <el-table-column prop="accountChange" label="金额"></el-table-column>
-        <el-table-column prop="companyName" label="服务商"></el-table-column>
+        <el-table-column prop="companyName" label="公司"></el-table-column>
         <el-table-column prop="bankName" label="转账凭证">
           <template slot-scope="scope">
             <el-image

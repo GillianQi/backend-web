@@ -72,7 +72,22 @@ export default new Router({
         {
           path: '/invoice',
           component: () => import('@/views/invoice/index.vue'),
-          meta: { title: '发票管理' }
+          meta: { title: '发票管理-未完成' }
+        },
+        {
+          path: '/invoice-finish',
+          component: () => import('@/views/invoice/finish.vue'),
+          meta: { title: '发票管理-已完成' }
+        },
+        {
+          path: '/invoice-special',
+          component: () => import('@/views/invoice/todoSpe.vue'),
+          meta: { title: '专项发票-未完成' }
+        },
+        {
+          path: '/invoice-finish-special',
+          component: () => import('@/views/invoice/finishSpe.vue'),
+          meta: { title: '发票管理-已完成' }
         },
         {
           path: '/404',

@@ -92,14 +92,12 @@ export default {
     this.getData();
   },
   methods: {
-    // 获取 easy-mock 的模拟数据
     async getData() {
       const res = await getWorkerListApi(this.query)
       if (res && res.code === 0) {
         this.tableData = res.data.list
         this.pageTotal = res.data.totalCount
       }
-      console.log(res)
     },
     // 触发搜索按钮
     handleSearch() {

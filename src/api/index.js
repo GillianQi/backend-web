@@ -19,3 +19,9 @@ export const getSalaryDetailApi = data => httpPostJSON('/salaryInfo/getUndelSala
 export const updateSalaryDetailApi = data => httpPostJSON('/salaryInfo/editPerson', data) // 编辑员工薪资详情
 export const importWorkersSalaryApi = data => httpUpload('/salaryInfo/batchInsertSalary', data) // 员工薪酬批量导入
 export const submitWorkersSalaryApi = data => httpPostJSON('/salaryInfo/submitSalaryDel', data)  // 提交薪资记录
+export const getInvoiceListApi = data => httpPostJSON('/invoiceMainPO/getMainListByType', data)  // 获取发票列表
+export const getInvoiceDetailApi = data => httpGet('/invoiceMainPO/getInvoiceDetailById', data)  // 获取发票详情
+export const getInvoiceTemplateApi = data => httpGet('/invoiceMainPO/getInvoiceDetailBytmp', data)  // 获取发票模板
+export const finishInvoiceApproveApi = data => httpPost('/invoiceMainPO/submit', data)  // 提交
+
+
