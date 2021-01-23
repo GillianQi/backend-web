@@ -66,9 +66,6 @@ export default {
     return {
       query: {
         workerName: '',
-        workStatus	: '',
-        page: 1,
-        pageSize: 10
       },
       tableData: [],
       multipleSelection: [],

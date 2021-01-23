@@ -2,9 +2,9 @@
   <div>
     <div class="container">
       <div class="handle-box">
-        客户名称：<el-input v-model="query.name" placeholder="客户名称" class="handle-input mr10"></el-input>
-        企业名称： <el-input v-model="query.name" placeholder="企业名称" class="handle-input mr10"></el-input>
-        工程名称： <el-input v-model="query.name" placeholder="工程名称" class="handle-input mr10"></el-input>
+        客户名称：<el-input v-model="query.companyUserName" placeholder="客户名称" class="handle-input mr10"></el-input>
+        企业名称： <el-input v-model="query.companyName" placeholder="企业名称" class="handle-input mr10"></el-input>
+        工程名称： <el-input v-model="query.companyWorkInfoName" placeholder="工程名称" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
         <el-button type="primary" @click="handleSubmit">提交</el-button>
       </div>
@@ -70,6 +70,9 @@ export default {
     return {
       query: {
         salaryStatus: '1', // 1:待处理，2：已同意，3：拒绝
+        companyWorkInfoName: '',
+        companyName: '',
+        companyUserName: '',
         page: 1,
         pageSize: 10
       },
