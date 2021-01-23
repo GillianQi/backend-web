@@ -1,6 +1,10 @@
 <template>
   <div>
     <div class="container">
+      <div class="handle-box">
+        公司名称 <el-input v-model="query.companyName" placeholder="公司名称" class="handle-input mr10"></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+      </div>
       <el-table
         :data="tableData"
         border
@@ -72,6 +76,8 @@ export default {
   data() {
     return {
       query: {
+        companyName: '',
+        authStatus: '0',
         page: 0,
         pageSize: 10
       },
@@ -89,12 +95,7 @@ export default {
   },
   methods: {
     async getData() {
-      const params = {
-        authStatus: '0',
-        page: 1,
-        pageSize: 10
-      }
-      const res = await getCompanyList(params)
+      const res = await getCompanyList(this.query)
       if (res) {
         this.tableData = res.list
         this.pageTotal = res.totalCount

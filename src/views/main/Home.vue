@@ -6,7 +6,7 @@
       <div class="content">
         <transition name="move" mode="out-in">
           <keep-alive>
-            <router-view></router-view>
+            <router-view v-if="isRouter" :key="key"></router-view>
           </keep-alive>
         </transition>
         <el-backtop target=".content"></el-backtop>
@@ -23,8 +23,27 @@ export default {
   data() {
     return {
       tagsList: [],
-      collapse: false
+      collapse: false,
+      isRouter: true
     };
+  },
+  provide(){
+    return {
+      reload: this.reload()
+    }
+  },
+  methods: {
+    reload() {
+      this.isRouter = false
+      this.$nextTick(() => {
+        this.isRouter = true
+      })
+    }
+  },
+  computed: {
+    key() {
+      return this.$route.fullPath + Math.random()
+    }
   },
   components: {
     vHead,

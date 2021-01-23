@@ -1,6 +1,10 @@
 <template>
   <div>
     <div class="container">
+      <div class="handle-box">
+        工程名称 <el-input v-model="query.programName" placeholder="工程名称" class="handle-input mr10"></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="getData">搜索</el-button>
+      </div>
       <el-table
         :data="tableData"
         border
@@ -19,13 +23,13 @@
             <span>{{scope.row.programStatus === '1' ? '已完成' : '进行中'}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
-            <!-- <el-button
+            <el-button
               type="text"
-              icon="el-icon-edit"
-              @click="editEngineer(scope.$index, scope.row)"
-            >编辑</el-button> -->
+              icon="el-icon-view"
+              @click="viewRecord(scope.$index, scope.row)"
+            >打卡记录</el-button>
             <el-button
               type="text"
               icon="el-icon-plus"
@@ -51,7 +55,10 @@
       </div>
     </div>
 
-    <!-- 编辑弹出框 -->
+    <el-dialog title="打卡记录" :visible.sync="viewVisibleR" width="80%">
+      <view-records v-if="viewVisibleR" :programId="id" @close="closeAddWorkers"></view-records>
+    </el-dialog>
+
     <el-dialog title="添加工人" :visible.sync="editVisible" width="80%">
       <add-workers v-if="editVisible" :programId="id" @close="closeAddWorkers"></add-workers>
     </el-dialog>
@@ -68,6 +75,7 @@ import {
 } from '@/api/'
 import addWorkers from './components/addWorker'
 import viewWorkers from './components/viewWorkers'
+import viewRecords from './components/viewRecords'
 
 export default {
   name: 'engineer',
@@ -75,13 +83,15 @@ export default {
     return {
       query: {
         companyId: this.$route.query.id,
+        programName: '',
         page: 1,
         pageSize: 10
       },
-      tableData: [{}],
+      tableData: [],
       delList: [],
       editVisible: false,
       viewVisible: false,
+      viewVisibleR: false,
       viewForm: {},
       pageTotal: 0,
       form: {},
@@ -96,8 +106,10 @@ export default {
   methods: {
     async getData() {
       const res = await getProjectListApi(this.query)
-      this.tableData = res.data.list
-      this.pageTotal = res.data.list
+      if (res && res.code == 0) {
+         this.tableData = res.data.list
+        this.pageTotal = res.data.totalCount
+      }
     },
     // 操作
     addWorkers(index, row) {
@@ -105,6 +117,18 @@ export default {
       this.idx = index;
       this.form = row;
       this.editVisible = true;
+    },
+    viewRecord(index, row) {
+      this.id = row.id
+      this.idx = index;
+      this.form = row;
+      this.viewVisibleR = true
+    },
+    closeViewRecords() {
+      this.id = ''
+      this.idx = 0;
+      this.form = {};
+      this.viewVisibleR = false
     },
     closeAddWorkers() {
       this.id = ''
@@ -141,7 +165,8 @@ export default {
   },
   components: {
     addWorkers,
-    viewWorkers
+    viewWorkers,
+    viewRecords
   }
 };
 </script>

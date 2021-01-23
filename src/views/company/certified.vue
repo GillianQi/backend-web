@@ -1,6 +1,10 @@
 <template>
   <div>
     <div class="container">
+      <div class="handle-box">
+        公司名称 <el-input v-model="query.companyName" placeholder="公司名称" class="handle-input mr10"></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+      </div>
       <el-table
         :data="tableData"
         border
@@ -17,10 +21,35 @@
             ></el-image>
           </template>
         </el-table-column>
+        <el-table-column label="营业执照" align="center">
+          <template slot-scope="scope">
+            <el-image
+              v-if="scope.row.contractImg"
+              class="table-td-thumb"
+              :src="scope.row.contractImg.split(separator)[0]"
+              :preview-src-list="scope.row.contractImg.split(separator)"
+            ></el-image>
+          </template>
+        </el-table-column>
         <el-table-column prop="taxpayerNum" label="纳税人识别号"></el-table-column>
         <el-table-column prop="bankAccount" label="开户行名称"></el-table-column>
         <el-table-column prop="bankName" label="开户行账号"></el-table-column>
         <el-table-column prop="taxpayAddress" label="开票地址"></el-table-column>
+        <el-table-column prop="additionRate" label="附加税">
+           <template slot-scope="scope">
+            {{scope.row.additionRate*100}}%
+          </template>
+        </el-table-column>
+        <el-table-column prop="serviceRate" label="服务税税率">
+          <template slot-scope="scope">
+            {{scope.row.serviceRate*100}}%
+          </template>
+        </el-table-column>
+        <el-table-column prop="vatRate" label="增值税税率">
+          <template slot-scope="scope">
+            {{scope.row.vatRate*100}}%
+          </template>
+        </el-table-column>
         <el-table-column prop="mobile" label="联系电话"></el-table-column>
         <el-table-column label="操作" width="220" align="center">
           <template slot-scope="scope">
@@ -34,6 +63,11 @@
               icon="el-icon-view"
               @click="viewRechargeHistory(scope.$index, scope.row)"
             >充值记录</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-edit"
+              @click="showEdit(scope.$index, scope.row)"
+            >编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -50,13 +84,19 @@
     </div>
 
     <!-- 编辑弹出框 -->
-    <el-dialog title="充值" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="70px">
+    <el-dialog title="编辑" :visible.sync="editVisible" width="40%">
+      <el-form ref="form" :model="form" label-width="100px">
         <el-form-item label="公司名称">
           <span>{{form.companyName}}</span>
         </el-form-item>
-        <el-form-item label="充值金额">
-          <el-input v-model="form.sum"></el-input>
+        <el-form-item label="附加税">
+          <el-input class="input" v-model="additionRate"></el-input>%
+        </el-form-item>
+        <el-form-item label="增值税税率	">
+          <el-input class="input" v-model="vatRate"></el-input>%
+        </el-form-item>
+        <el-form-item label="服务税税率">
+          <el-input class="input" v-model="serviceRate"></el-input>%
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -69,7 +109,8 @@
 
 <script>
 import {
-  getCompanyList
+  getCompanyList,
+  updateRateApi
 } from '@/api/'
 
 export default {
@@ -77,6 +118,7 @@ export default {
   data() {
     return {
       query: {
+        companyName: '',
         authStatus: '2',
         page: 1,
         pageSize: 10
@@ -86,7 +128,8 @@ export default {
       pageTotal: 0,
       form: {},
       idx: -1,
-      id: -1
+      id: -1,
+      separator: '#&#'
     };
   },
   created() {
@@ -132,16 +175,40 @@ export default {
         }
       })
     },
+    showEdit(index, row) {
+      this.form = row
+      this.editVisible = true
+    },
     // 保存编辑
-    saveEdit() {
+    async saveEdit() {
       this.editVisible = false;
-      this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-      this.$set(this.tableData, this.idx, this.form);
+      const params = {
+        companyId: this.form.id,
+        additionRate: Number(this.additionRate)/100,
+        serviceRate: Number(this.serviceRate)/100,
+        vatRate: Number(this.vatRate)/100
+      }
+      const res = await updateRateApi(params)
+      if (res && res.code == 0) {
+        this.$message.success('更新成功');
+      }
+      console.log(res)
     },
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'page', val);
       this.getData();
+    }
+  },
+  computed: {
+    additionRate() {
+      return this.form.additionRate*100
+    },
+    serviceRate() {
+      return this.form.serviceRate*100
+    },
+    vatRate() {
+      return this.form.vatRate*100
     }
   }
 };
@@ -152,6 +219,9 @@ export default {
   margin-bottom: 20px;
 }
 
+.input {
+  width: 80%;
+}
 .handle-select {
   width: 120px;
 }

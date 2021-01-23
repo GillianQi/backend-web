@@ -18,15 +18,6 @@
             :value="item.id">
           </el-option>
         </el-select>
-        <el-date-picker
-          v-model="query.date"
-          type="date"
-          value-format="yyyy-MM-dd"
-          class="mr10"
-          placeholder="选择日期">
-        </el-date-picker>
-        <el-input v-model="query.workerName" placeholder="姓名" class="handle-input mr10"></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
       <el-upload
         class="upload-excel"
@@ -118,7 +109,6 @@ export default {
     };
   },
   created() {
-    this.getData();
     this.getCompanyList();
   },
   methods: {
@@ -137,7 +127,7 @@ export default {
       }
       const res = await getCompanyList(query)
       this.companyList = res.list
-      this.getProjectList()
+      // this.getProjectList()
     },
     async getProjectList() {
       const query = {

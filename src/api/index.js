@@ -23,5 +23,5 @@ export const getInvoiceListApi = data => httpPostJSON('/invoiceMainPO/getMainLis
 export const getInvoiceDetailApi = data => httpGet('/invoiceMainPO/getInvoiceDetailById', data)  // 获取发票详情
 export const getInvoiceTemplateApi = data => httpGet('/invoiceMainPO/getInvoiceDetailBytmp', data)  // 获取发票模板
 export const finishInvoiceApproveApi = data => httpPost('/invoiceMainPO/submit', data)  // 提交
-
+export const updateRateApi = data => httpPost('/companyInfo/updateRate', data)  // 修改公司税率
 

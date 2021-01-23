@@ -67,40 +67,7 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      tableData: [
-        {
-          "companyId": 0,
-          "createTime": "",
-          "createUser": 0,
-          "descript": "",
-          "id": 0,
-          "programCompanyName": "公司111",
-          "programEndTime": "2020-11-11",
-          "programName": "工程111",
-          "programRealEndTime": "2020-11-11",
-          "programStartTime": "2020-11-11",
-          "programStatus": "0",
-          "status": 0,
-          "updateTime": "",
-          "updateUser": 0
-        },
-        {
-          "companyId": 0,
-          "createTime": "",
-          "createUser": 0,
-          "descript": "",
-          "id": 0,
-          "programCompanyName": "公司111",
-          "programEndTime": "2020-11-11",
-          "programName": "工程222",
-          "programRealEndTime": "2020-11-11",
-          "programStartTime": "2020-11-11",
-          "programStatus": "1",
-          "status": 0,
-          "updateTime": "",
-          "updateUser": 0
-        }
-      ],
+      tableData: [],
       delList: [],
       editVisible: false,
       pageTotal: 0,

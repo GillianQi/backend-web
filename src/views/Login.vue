@@ -64,8 +64,9 @@ export default {
       }
       const res = await loginApi(params)
       if (res.code === 0) {
-        localStorage.setItem('ms_username', this.param.username);
-        localStorage.setItem('token', res.data);
+        localStorage.setItem('ms_username', res.data.userName);
+        localStorage.setItem('token', res.data.accessToken);
+        localStorage.setItem('role', res.data.currentRole);
         this.$router.push('/');
       } else {
         this.$message.error(res.message);

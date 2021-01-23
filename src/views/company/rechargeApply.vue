@@ -22,7 +22,7 @@
         <el-table-column prop="descript" label="备注"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
-            <span v-if="applyStatus === '1'">
+            <span v-if="scope.row.applyStatus === '1'">
               <el-button
                 type="text"
                 @click="handleAuth(scope.row, 1)"
@@ -87,13 +87,14 @@ export default {
     };
   },
   created() {
+    console.log(22)
     this.getData();
   },
   methods: {
     async getData() {
       const res = await rechargeApplyListApi(this.query)
-      this.tableData = res.list
-      this.pageTotal = res.totalCount
+      this.tableData = res.data.list
+      this.pageTotal = res.data.totalCount
     },
     // 触发搜索按钮
     handleSearch() {

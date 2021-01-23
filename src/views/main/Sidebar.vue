@@ -2,7 +2,7 @@
   <div class="sidebar">
     <el-menu
       class="sidebar-el-menu"
-      :default-active="onRoutes"
+      :default-active="$route.fullPath"
       :collapse="collapse"
       background-color="#324157"
       text-color="#bfcbd9"
@@ -55,6 +55,7 @@ export default {
   data() {
     return {
       collapse: false,
+      role: localStorage.getItem('role'),
       items: [
         {
           icon: 'el-icon-s-home',
@@ -64,10 +65,6 @@ export default {
             {
               index: 'workers',
               title: '工人列表'
-            },
-            {
-              index: 'workers-clock',
-              title: '打卡记录'
             }
           ]
         },
@@ -154,6 +151,9 @@ export default {
       this.collapse = msg;
       bus.$emit('collapse-content', msg);
     });
+    if (this.role == 99999) {
+      this.items[0].subs.push({index: 'workers-clock',title: '打卡记录'})
+    }
   }
 };
 </script>

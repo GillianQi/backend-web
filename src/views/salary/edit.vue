@@ -166,7 +166,7 @@ export default {
     },
     uploadFile(file){
       var formData = new FormData();
-      formData.append('programId', this.$route.query.id);
+      formData.append('mainId', this.$route.query.id);
       formData.append('file',file);
       importWorkersSalaryApi(formData)
     },

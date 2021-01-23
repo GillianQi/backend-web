@@ -8,7 +8,7 @@ axios.interceptors.request.use(
     return config;
   },
   error => {
-    console.log(error);
+    console.log('err--',error);
     return Promise.reject();
   }
 );
@@ -17,13 +17,23 @@ axios.interceptors.response.use(
   response => {
     if (response.status === 200) {
       switch (response.data.code) {
-        case -1: case -2 :case -3: case 401 :case 1002: case 1003: case 1004: case 1005: case 1006:
-        case 1007: case 1008: case 1009:
+        case -3: case 401: case 1005:
           localStorage.clear()
           router.push('/')
           Message.warning({message: response.data.message})
           break
+        case -1: case -2: case 1002: case 1003: case 1004: case 1006:
+        case 1007: case 1008: case 1009:
+          Message.warning({message: response.data.message})
+          break
+        case 0:
+          // Promise.resolve(response.data)
+          return response.data
+        case 500:
+          Message.warning({message: '服务器内部错误'})
+          break
         default:
+          // Message.warning({message: '服务器内部错误'})
           return response.data;
       }
     } else {
@@ -32,7 +42,6 @@ axios.interceptors.response.use(
     }
   },
   error => {
-    console.log(error);
     return Promise.reject(error);
   }
 );
