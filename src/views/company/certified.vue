@@ -21,7 +21,7 @@
             ></el-image>
           </template>
         </el-table-column>
-        <el-table-column label="营业执照" align="center">
+        <el-table-column label="合同" align="center">
           <template slot-scope="scope">
             <el-image
               v-if="scope.row.contractImg"

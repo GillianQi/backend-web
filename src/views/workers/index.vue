@@ -32,6 +32,16 @@
             <span v-else>未在职</span>
           </template>
         </el-table-column>
+        <el-table-column label="操作" width="180" align="center">
+          <template slot-scope="scope">
+            <el-button
+              v-if="scope.row.signFileUrl"
+              type="text"
+              icon="el-icon-view"
+              @click="viewDetail(scope.$index, scope.row)"
+            >查看</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -103,6 +113,10 @@ export default {
     handleSearch() {
       this.$set(this.query, 'page', 1);
       this.getData();
+    },
+    viewDetail(index,row){
+      console.log(index)
+      window.open(row.signFileUrl , '__blank')
     },
     // 删除操作
     handleDelete(index, row) {

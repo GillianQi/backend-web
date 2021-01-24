@@ -175,6 +175,7 @@ export default {
       this.detail = {}
       this.form = {}
       this.isShowViewDialog = false;
+      this.getData()
     },
     // 编辑操作
     handleEdit(index, row) {
