@@ -14,12 +14,12 @@
         ref="multipleTable"
         header-cell-class-name="table-header"
       >
-        <el-table-column prop="orderId" label="订单编号"></el-table-column>
-        <el-table-column prop="customerName" label="客户名称"></el-table-column>
-        <el-table-column prop="programCompanyName" label="企业名称"></el-table-column>
-        <el-table-column prop="programName" label="工程项目名称"></el-table-column>
+        <el-table-column prop="orderNum" label="订单编号"></el-table-column>
+        <el-table-column prop="companyUserName" label="客户名称"></el-table-column>
+        <el-table-column prop="companyName" label="企业名称"></el-table-column>
+        <el-table-column prop="companyWorkInfoName" label="工程项目名称"></el-table-column>
         <el-table-column prop="salaryDate" label="工资日期"></el-table-column>
-        <el-table-column prop="applyTime" label="申请时间"></el-table-column>
+        <el-table-column prop="createTime" label="申请时间"></el-table-column>
         <el-table-column prop="endTime" label="结束日期"></el-table-column>
         <el-table-column label="工资表" align="center">
           <template slot-scope="scope">
@@ -86,7 +86,7 @@ export default {
   methods: {
     async getData() {
       const res = await getSalaryListApi(this.query)
-      this.tableData = res.list
+      this.tableData = res.data.list
     },
     // 触发搜索按钮
     handleSearch() {

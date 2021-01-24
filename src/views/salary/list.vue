@@ -2,9 +2,9 @@
   <div>
     <div class="container">
       <div class="handle-box">
-        姓名：<el-input v-model="query.name" placeholder="姓名" class="handle-input mr10"></el-input>
-        身份证号： <el-input v-model="query.name" placeholder="身份证号" class="handle-input mr10"></el-input>
-        手机号： <el-input v-model="query.name" placeholder="手机号" class="handle-input mr10"></el-input>
+        姓名：<el-input v-model="query.userName" placeholder="姓名" class="handle-input mr10"></el-input>
+        身份证号： <el-input v-model="query.idCard" placeholder="身份证号" class="handle-input mr10"></el-input>
+        手机号： <el-input v-model="query.mobile" placeholder="手机号" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
       <el-table
@@ -15,16 +15,16 @@
         header-cell-class-name="table-header"
       >
         <el-table-column prop="programName" label="工程项目名称"></el-table-column>
-        <el-table-column prop="programName" label="编号"></el-table-column>
-        <el-table-column prop="programStartTime" label="姓名"></el-table-column>
-        <el-table-column prop="programEndTime" label="工种"></el-table-column>
-        <el-table-column prop="programRealEndTime" label="身份证号"></el-table-column>
-        <el-table-column prop="updateUser" label="出勤天数"></el-table-column>
-        <el-table-column prop="updateUser" label="手机号"></el-table-column>
-        <el-table-column prop="updateUser" label="银行卡号"></el-table-column>
-        <el-table-column prop="updateUser" label="起始时间"></el-table-column>
-        <el-table-column prop="updateUser" label="终止时间"></el-table-column>
-        <el-table-column prop="updateUser" label="工资金额（元）"></el-table-column>
+        <el-table-column prop="orderNum" label="编号"></el-table-column>
+        <el-table-column prop="userName" label="姓名"></el-table-column>
+        <el-table-column prop="workType" label="工种"></el-table-column>
+        <el-table-column prop="idCard" label="身份证号"></el-table-column>
+        <el-table-column prop="signDate" label="出勤天数"></el-table-column>
+        <el-table-column prop="mobile" label="手机号"></el-table-column>
+        <el-table-column prop="bankCard" label="银行卡号"></el-table-column>
+        <el-table-column prop="salaryDate" label="工资月份"></el-table-column>
+        <el-table-column prop="salary" label="工资金额（元）"></el-table-column>
+
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -57,14 +57,19 @@
 </template>
 
 <script>
+import {
+  getSalaryDetailApi
+} from '@/api/'
 export default {
   name: 'engineer',
   data() {
     return {
       query: {
-        address: '',
-        name: '',
-        pageIndex: 1,
+        salaryMainId: this.$route.query.id,
+        userName: '',
+        idCard: '',
+        mobile: '',
+        page: 1,
         pageSize: 10
       },
       tableData: [],
@@ -81,12 +86,15 @@ export default {
   },
   methods: {
     // 获取 easy-mock 的模拟数据
-    getData() {
-      // fetchData(this.query).then(res => {
-      //   console.log(res);
-      //   this.tableData = res.list;
-      //   this.pageTotal = res.pageTotal || 50;
-      // });
+    async getData() {
+      const res = await getSalaryDetailApi(this.query)
+      if (res && res.code == 0) {
+        this.tableData = res.data.list
+      }
+    },
+    handleSearch() {
+      this.$set(this.query, 'page', 1);
+      this.getData();
     },
     // 删除操作
     addWorkers(index, row) {
