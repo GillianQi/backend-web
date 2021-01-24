@@ -2,9 +2,9 @@
   <div>
     <div class="container">
       <div class="handle-box">
-        客户名称：<el-input v-model="query.companyUserName" placeholder="客户名称" class="handle-input mr10"></el-input>
+        客户名称：<el-input v-model="query.userName" placeholder="客户名称" class="handle-input mr10"></el-input>
         企业名称： <el-input v-model="query.companyName" placeholder="企业名称" class="handle-input mr10"></el-input>
-        工程名称： <el-input v-model="query.companyWorkInfoName" placeholder="工程名称" class="handle-input mr10"></el-input>
+        工程名称： <el-input v-model="query.programName" placeholder="工程名称" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
         <el-button type="primary" @click="handleSubmit">提交</el-button>
       </div>
@@ -17,7 +17,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="orderId" label="订单编号"></el-table-column>
+        <el-table-column prop="orderNum" label="订单编号"></el-table-column>
         <el-table-column prop="companyUserName" label="客户名称"></el-table-column>
         <el-table-column prop="companyName" label="企业名称"></el-table-column>
         <el-table-column prop="companyWorkInfoName" label="工程项目名称"></el-table-column>
@@ -70,9 +70,9 @@ export default {
     return {
       query: {
         salaryStatus: '1', // 1:待处理，2：已同意，3：拒绝
-        companyWorkInfoName: '',
+        programName: '',
         companyName: '',
-        companyUserName: '',
+        userName: '',
         page: 1,
         pageSize: 10
       },
@@ -109,6 +109,9 @@ export default {
         return item.id
       })
       const res = await submitWorkersSalaryApi({ids: ids.toString()})
+      if (res && res.code ==0) {
+        this.getData()
+      }
       console.log(res)
     },
     // 编辑操作

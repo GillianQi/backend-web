@@ -2,9 +2,9 @@
   <div>
     <div class="container">
       <div class="handle-box">
-        客户名称：<el-input v-model="query.name" placeholder="客户名称" class="handle-input mr10"></el-input>
-        企业名称： <el-input v-model="query.name" placeholder="企业名称" class="handle-input mr10"></el-input>
-        工程名称： <el-input v-model="query.name" placeholder="工程名称" class="handle-input mr10"></el-input>
+        客户名称：<el-input v-model="query.userName" placeholder="客户名称" class="handle-input mr10"></el-input>
+        企业名称： <el-input v-model="query.companyName" placeholder="企业名称" class="handle-input mr10"></el-input>
+        工程名称： <el-input v-model="query.programName" placeholder="工程名称" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
       <el-table
@@ -65,8 +65,10 @@ export default {
   data() {
     return {
       query: {
-        address: '',
-        name: '',
+        userName: '',
+        companyName: '',
+        programName: '',
+        salaryStatus: '2',
         pageIndex: 1,
         pageSize: 10
       },
@@ -83,12 +85,7 @@ export default {
   },
   methods: {
     async getData() {
-      const params = {
-        salaryStatus: '2', // 1:待处理，2：已同意，3：拒绝	
-        page: 0,
-        pageSize: 10
-      }
-      const res = await getSalaryListApi(params)
+      const res = await getSalaryListApi(this.query)
       this.tableData = res.list
     },
     // 触发搜索按钮

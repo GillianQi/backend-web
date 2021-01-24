@@ -69,7 +69,7 @@
             style="flex: 1; justify-content: center; "
             class="table-title table-column-div-right"
           >建筑服务*工程款</div>
-          <div style="flex: 1; justify-content: center;" class="table-desc">{{detail.serviceRate}}</div>
+          <div style="flex: 1; justify-content: center;" class="table-desc">{{detail.accountNum}}</div>
         </div>
         <div class="table-row table-row-div-bottom">
           <div
@@ -116,7 +116,7 @@
         <div style="flex: 3;" class="table-row-div-bottom">{{detail.descript}}</div>
       </div>
     </div>
-    <div v-if="detail.invoiceStatus == 0" class="body-ope">
+    <div v-if="row.invoiceStatus == 0" class="body-ope">
       <div style="display: flex;align-items: center;">
         <div class="body-ope-button" @click="finish">完成</div>
       </div>
