@@ -20,7 +20,10 @@
         <!-- <el-table-column prop="updateUser" label="施工人数"></el-table-column> -->
         <el-table-column prop="programStatus" label="状态">
           <template slot-scope="scope">
-            <span>{{scope.row.programStatus === '1' ? '已完成' : '进行中'}}</span>
+            <span v-if="scope.row.programStatus == 0">已失效</span>
+            <span v-if="scope.row.programStatus == 1">已发布</span>
+            <span v-if="scope.row.programStatus == 2">已完工</span>
+            <span v-if="scope.row.programStatus == 3">进行中</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="260" align="center">
@@ -31,6 +34,7 @@
               @click="viewRecord(scope.$index, scope.row)"
             >打卡记录</el-button>
             <el-button
+              v-if="scope.row.programStatus == 1 || scope.row.programStatus == 3"
               type="text"
               icon="el-icon-plus"
               @click="addWorkers(scope.$index, scope.row)"
