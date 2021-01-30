@@ -21,6 +21,16 @@
             ></el-image>
           </template>
         </el-table-column>
+        <el-table-column label="合同" align="center">
+          <template slot-scope="scope">
+            <el-image
+              v-if="scope.row.contractImg"
+              class="table-td-thumb"
+              :src="scope.row.contractImg.split(separator)[0]"
+              :preview-src-list="scope.row.contractImg.split(separator)"
+            ></el-image>
+          </template>
+        </el-table-column>
         <el-table-column prop="taxpayerNum" label="纳税人识别号"></el-table-column>
         <el-table-column prop="bankAccount" label="开户行名称"></el-table-column>
         <el-table-column prop="bankName" label="开户行账号"></el-table-column>
@@ -77,7 +87,7 @@ export default {
     return {
       query: {
         companyName: '',
-        authStatus: '0',
+        authStatus: '1',
         page: 0,
         pageSize: 10
       },

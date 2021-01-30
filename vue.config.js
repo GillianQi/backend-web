@@ -79,7 +79,23 @@ module.exports = {
         pathRewrite: {
           '^/invoiceMainPO': '/invoiceMainPO'
         },
+      },
+      '/suggest': {
+        target: 'https://admin.jxbanchen.com/',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/suggest': '/suggest'
+        },
+      },
+      '/user': {
+        target: 'https://admin.jxbanchen.com/',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/user': '/user'
+        },
       }
-    }
+    },
   }
 };

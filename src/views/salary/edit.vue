@@ -9,9 +9,10 @@
         <el-upload
           class="upload-excel"
           action="/salaryInfo/batchInsertSalary"
-          :before-upload="beforeUpload"
           :on-success="uploadSuccess"
           :before-remove="beforeRemove"
+          :auto-upload="false"
+          :on-change="uploadFile"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
       </el-upload>
@@ -161,19 +162,23 @@ export default {
       this.$set(this.query, 'page', val);
       this.getData();
     },
-    beforeUpload(file) {
-      this.uploadFile(file)
-    },
-    uploadFile(file){
+    async uploadFile(file){
       var formData = new FormData();
       formData.append('mainId', this.$route.query.id);
-      formData.append('file',file);
-      importWorkersSalaryApi(formData)
+      formData.append('file',file.raw);
+      const res = await importWorkersSalaryApi(formData)
+      if (res && res.code == 0) {
+        this.$message.success('上传成功')
+        this.fileList = []
+      } else {
+        this.$message.warning(res.message)
+      }
     },
     uploadSuccess() {
       this.query.userName = ''
       this.query.idCard = ''
       this.query.mobile = ''
+      this.fileList = []
       this.getData()
     },
     beforeRemove(file) {

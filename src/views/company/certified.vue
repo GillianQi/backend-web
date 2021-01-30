@@ -35,6 +35,8 @@
         <el-table-column prop="bankAccount" label="开户行名称"></el-table-column>
         <el-table-column prop="bankName" label="开户行账号"></el-table-column>
         <el-table-column prop="taxpayAddress" label="开票地址"></el-table-column>
+        <el-table-column prop="userName" label="用户名"></el-table-column>
+        <el-table-column prop="accountNum" label="账户余额"></el-table-column>
         <el-table-column prop="additionRate" label="附加税">
            <template slot-scope="scope">
             {{scope.row.additionRate*100}}%
@@ -90,7 +92,7 @@
           <span>{{form.companyName}}</span>
         </el-form-item>
         <el-form-item label="附加税">
-          <el-input class="input" v-model="additionRate"></el-input>%
+          <el-input type="number" class="input" v-model="additionRate"></el-input>%
         </el-form-item>
         <el-form-item label="增值税税率	">
           <el-input class="input" v-model="vatRate"></el-input>%
@@ -191,8 +193,8 @@ export default {
       const res = await updateRateApi(params)
       if (res && res.code == 0) {
         this.$message.success('更新成功');
+        this.getData()
       }
-      console.log(res)
     },
     // 分页导航
     handlePageChange(val) {
@@ -201,20 +203,35 @@ export default {
     }
   },
   computed: {
-    additionRate() {
-      return this.form.additionRate*100
+    additionRate: {
+      get: function () {
+        return this.form.additionRate*100
+      },
+      set: function (val) {
+        this.form.additionRate = val / 100
+      }
     },
-    serviceRate() {
-      return this.form.serviceRate*100
+    serviceRate: {
+      get: function () {
+        return this.form.serviceRate*100
+      },
+      set: function (val) {
+        this.form.serviceRate = val / 100
+      }
     },
-    vatRate() {
-      return this.form.vatRate*100
+    vatRate: {
+      get: function () {
+        return this.form.vatRate*100
+      },
+      set: function (val) {
+        this.form.vatRate = val / 100
+      }
     }
   }
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .handle-box {
   margin-bottom: 20px;
 }
@@ -245,5 +262,12 @@ export default {
   margin: auto;
   width: 40px;
   height: 40px;
+}
+/deep/ input::-webkit-outer-spin-button,
+/deep/ input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+/deep/ input[type="number"]{
+    -moz-appearance: textfield;
 }
 </style>

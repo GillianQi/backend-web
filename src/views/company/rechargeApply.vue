@@ -10,7 +10,9 @@
         <el-table-column prop="userName" label="用户认证姓名"></el-table-column>
         <el-table-column prop="accountChange" label="金额"></el-table-column>
         <el-table-column prop="companyName" label="公司"></el-table-column>
-        <el-table-column prop="bankName" label="转账凭证">
+        <el-table-column prop="bankAccount" label="银行账号"></el-table-column>
+        <el-table-column prop="bankName" label="银行名称"></el-table-column>
+        <el-table-column prop="accountChangeImg" label="转账凭证">
           <template slot-scope="scope">
             <el-image
               class="table-td-thumb"

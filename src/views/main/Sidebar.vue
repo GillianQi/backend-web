@@ -108,11 +108,11 @@ export default {
           title: '发票管理',
           subs: [
             {
-              index: 'invoice',
+              index: 'invoice-todo',
               title: '待处理',
               subs: [
                 {
-                  index: 'invoice',
+                  index: 'invoice-common',
                   title: '增税票'
                 },
                 {
@@ -126,7 +126,7 @@ export default {
               title: '已完成',
               subs: [
                 {
-                  index: 'invoice-finish',
+                  index: 'invoice-finish-common',
                   title: '增税票'
                 },
                 {
@@ -136,6 +136,11 @@ export default {
               ]
             },
           ]
+        },
+        {
+          icon: 'el-icon-headset',
+          index: 'suggestion',
+          title: '投诉意见',
         }
       ]
     };
@@ -153,6 +158,7 @@ export default {
     });
     if (this.role == 99999) {
       this.items[0].subs.push({index: 'workers-clock',title: '打卡记录'})
+      this.items.push({icon: 'el-icon-user', index: 'users', title: '用户管理'})
     }
   }
 };

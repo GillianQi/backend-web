@@ -7,6 +7,7 @@
         工程名称： <el-input v-model="query.programName" placeholder="工程名称" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
         <el-button type="primary" @click="handleSubmit">提交</el-button>
+        <el-button type="primary" @click="handleRefuse">拒绝</el-button>
       </div>
       <el-table
         :data="tableData"
@@ -61,6 +62,7 @@
 <script>
 import {
   getSalaryListApi,
+  refuseSalaryApi,
   submitWorkersSalaryApi
 } from '@/api/'
 export default {
@@ -110,9 +112,23 @@ export default {
       })
       const res = await submitWorkersSalaryApi({ids: ids.toString()})
       if (res && res.code ==0) {
+        this.$message.success('操作成功')
         this.getData()
       }
-      console.log(res)
+    },
+    async handleRefuse() {
+      if (!this.multipleSelection.length) {
+        this.$message.warning('请至少选中一条');
+        return
+      }
+      let ids = this.multipleSelection.map(item => {
+        return item.id
+      })
+      const res = await refuseSalaryApi({ids: ids.toString()})
+      if (res && res.code ==0) {
+        this.$message.success('操作成功')
+        this.getData()
+      }
     },
     // 编辑操作
     handleEdit(index, row) {

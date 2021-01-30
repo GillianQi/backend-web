@@ -19,6 +19,7 @@
             <i class="el-icon-caret-bottom"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="resetPwd">修改密码</el-dropdown-item>
             <el-dropdown-item command="loginout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -48,6 +49,9 @@ export default {
       if (command == 'loginout') {
         localStorage.removeItem('ms_username');
         this.$router.push('/login');
+      }
+      if (command == 'resetPwd') {
+        this.$router.push('/reset-password');
       }
     },
     // 侧边栏折叠

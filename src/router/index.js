@@ -70,12 +70,12 @@ export default new Router({
           meta: { title: '工资管理' }
         },
         {
-          path: '/invoice',
+          path: '/invoice-common',
           component: () => import('@/views/invoice/index.vue'),
           meta: { title: '发票管理-未完成' }
         },
         {
-          path: '/invoice-finish',
+          path: '/invoice-finish-common',
           component: () => import('@/views/invoice/finish.vue'),
           meta: { title: '发票管理-已完成' }
         },
@@ -87,7 +87,22 @@ export default new Router({
         {
           path: '/invoice-finish-special',
           component: () => import('@/views/invoice/finishSpe.vue'),
-          meta: { title: '发票管理-已完成' }
+          meta: { title: '专项发票-已完成' }
+        },
+        {
+          path: '/suggestion',
+          component: () => import('@/views/suggestion/index.vue'),
+          meta: { title: '意见反馈' }
+        },
+        {
+          path: '/users',
+          component: () => import('@/views/users/index.vue'),
+          meta: { title: '用户信息' }
+        },
+        {
+          path: '/reset-password',
+          component: () => import('@/views/users/reset.vue'),
+          meta: { title: '重置密码' }
         },
         {
           path: '/404',

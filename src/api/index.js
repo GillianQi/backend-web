@@ -24,4 +24,12 @@ export const getInvoiceDetailApi = data => httpGet('/invoiceMainPO/getInvoiceDet
 export const getInvoiceTemplateApi = data => httpGet('/invoiceMainPO/getInvoiceDetailBytmp', data)  // 获取发票模板
 export const finishInvoiceApproveApi = data => httpPost('/invoiceMainPO/submit', data)  // 提交
 export const updateRateApi = data => httpPost('/companyInfo/updateRate', data)  // 修改公司税率
+export const getCertifiedListApi = data => httpGet('/worker/sign/listVerifyCompany', data) // 获取认证成功的企业
+export const getWorkByCompanyApi = data => httpGet('/worker/sign/listWorkByCompany', data) // 获取企业下的工程
+export const getSuggestionListApi = data => httpGet('/suggest/list', data) // 意见列表
+export const getUserListApi = data => httpGet('/user/list', data) // 用户列表
+export const addUserApi = data => httpPostJSON('/user/add', data)  // 添加用户
+export const resetPwdApi = data => httpPost('/user/changePwd', data)  // 重置密码
+export const refuseSalaryApi= data => httpPost('/salaryInfo/refuseSalaryDel', data)
+
 

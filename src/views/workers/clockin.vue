@@ -2,6 +2,7 @@
   <div>
     <div class="container">
       <div class="handle-box">
+        <span>公司：</span>
         <el-select v-model="query.companyId" filterable clearable placeholder="请选择" class="mr10" @change="getProjectList()">
           <el-option
             v-for="item in companyList"
@@ -10,6 +11,7 @@
             :value="item.id">
           </el-option>
         </el-select>
+        <span>项目：</span>
         <el-select v-model="query.workId" filterable clearable placeholder="请选择" class="mr10">
           <el-option
             v-for="item in projectList"
@@ -23,62 +25,21 @@
         class="upload-excel"
         action="/worker/sign/upload"
         :before-upload="beforeUpload"
+        :auto-upload="false"
+        :on-change="uploadFile"
         :on-success="uploadSuccess"
-        :before-remove="beforeRemove"
         :file-list="fileList">
-        <el-button size="small" type="primary">点击上传</el-button>
+        <el-button slot="trigger" size="small" type="primary">点击上传</el-button>
       </el-upload>
-      <el-table
-        :data="tableData"
-        border
-        class="table"
-        ref="multipleTable"
-        header-cell-class-name="table-header"
-      >
-        <el-table-column prop="workerName" label="姓名"></el-table-column>
-        <el-table-column prop="workCompany" label="参加单位"></el-table-column>
-        <el-table-column prop="workGroup" label="班组"></el-table-column>
-        <el-table-column prop="cardNo" label="卡号"></el-table-column>
-        <el-table-column prop="idCard" label="身份证号"></el-table-column>
-        <el-table-column prop="channel" label="通道"></el-table-column>
-        <el-table-column prop="signType" label="进/出"></el-table-column>
-        <el-table-column prop="signTime" label="考勤日期"></el-table-column>
-      </el-table>
-      <div class="pagination">
-        <el-pagination
-          background
-          layout="total, prev, pager, next"
-          :current-page="query.page"
-          :page-size="query.pageSize"
-          :total="pageTotal"
-          @current-change="handlePageChange"
-        ></el-pagination>
-      </div>
     </div>
-
-    <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="姓名">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="editVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveEdit">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import {
   getWorkerClockinApi,
-  getCompanyList,
-  getProjectListApi,
+  getCertifiedListApi,
+  getWorkByCompanyApi,
   importWorkersSignApi
 } from '@/api/'
 
@@ -89,11 +50,7 @@ export default {
     return {
       query: {
         companyId: '',
-        workId: '',
-        date: '',
-        workerName: '',
-        page: 0,
-        pageSize: 10,
+        workId: ''
       },
       fileList: [],
       tableData: [],
@@ -109,7 +66,7 @@ export default {
     };
   },
   created() {
-    this.getCompanyList();
+    this.getCertifiedListApi();
   },
   methods: {
     async getData() {
@@ -119,24 +76,18 @@ export default {
         this.pageTotal = res.data.totalCount
       }
     },
-    async getCompanyList() {
-      const query = {
-        authStatus: '2',
-        page: 1,
-        pageSize: 9999
-      }
-      const res = await getCompanyList(query)
-      this.companyList = res.list
+    async getCertifiedListApi() {
+      const res = await getCertifiedListApi()
+      this.companyList = res.data
       // this.getProjectList()
     },
     async getProjectList() {
+      this.query.workId = ''
       const query = {
-        companyId: this.query.companyId,
-        page: 1,
-        pageSize: 9999
+        companyId: this.query.companyId
       }
-      const res = await getProjectListApi(query)
-      this.projectList = res.data.list
+      const res = await getWorkByCompanyApi(query)
+      this.projectList = res.data
     },
     // 触发搜索按钮
     handleSearch() {
@@ -186,20 +137,44 @@ export default {
       this.$set(this.query, 'page', val);
       this.getData();
     },
-    beforeUpload(file) {
-      this.uploadFile(file)
+    beforeUpload() {
+      console.log('beff--')
+      if (!this.query.companyId) {
+        this.$message.warning('请先选择公司');
+        return false
+      }
+      if (!this.query.workId) {
+        this.$message.warning('请先选择项目');
+        return false
+      }
     },
-    uploadFile(file){
+    async uploadFile(file){
+      if (!this.query.companyId) {
+        this.$message.warning('请先选择公司');
+        this.fileList = []
+        return
+      }
+      if (!this.query.workId) {
+        this.fileList = []
+        this.$message.warning('请先选择项目');
+        return
+      }
       var formData = new FormData();
       formData.append('companyId', this.query.companyId);
       formData.append('workId',this.query.workId);
-      formData.append('file',file);
-      importWorkersSignApi(formData)
+      formData.append('file',file.raw);
+      const res = await importWorkersSignApi(formData)
+      if (res && res.code == 0) {
+        this.fileList = []
+        this.$message.success('上传成功')
+      }else {
+        this.$message.warning(res.message)
+      }
+      console.log(res)
     },
     uploadSuccess() {
-      this.query.workerName = ''
-      this.query.date = ''
-      this.getData()
+      this.$message.success('上传成功');
+      this.fileList = []
     },
     beforeRemove(file) {
       return this.$confirm(`确定移除 ${ file.name }？`);

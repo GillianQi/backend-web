@@ -25,8 +25,8 @@
           <template slot-scope="scope">
             <el-image
               class="table-td-thumb"
-              :src="scope.row.salaryPic"
-              :preview-src-list="[scope.row.salaryPic]"
+              :src="scope.row.salaryImg"
+              :preview-src-list="[scope.row.salaryImg]"
             ></el-image>
           </template>
         </el-table-column>

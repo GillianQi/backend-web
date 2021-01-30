@@ -1,40 +1,16 @@
 <template>
   <div>
     <div class="container">
-      <div class="handle-box">
-        <el-input v-model="query.workerName" placeholder="姓名" class="handle-input mr10"></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="handleAddWorkers">添加</el-button>
-      </div>
       <el-table
         :data="tableData"
         border
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
-        @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="workerName" label="姓名"></el-table-column>
-        <el-table-column prop="mobile" label="手机号"></el-table-column>
-        <el-table-column prop="idCard" label="身份证号"></el-table-column>
-        <el-table-column label="头像" align="center">
-          <template slot-scope="scope">
-            <el-image
-              class="table-td-thumb"
-              :src="scope.row.avatar"
-              :preview-src-list="[scope.row.avatar]"
-            ></el-image>
-          </template>
-        </el-table-column>
-        <el-table-column prop="workTypeDesc" label="工种"></el-table-column>
-        <el-table-column prop="workProgram" label="工作项目"></el-table-column>
-        <el-table-column prop="workStatus" label="状态">
-           <template slot-scope="scope">
-            <span v-if="scope.row.workStatus == '1'">在职</span>
-            <span v-else>未在职</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="suggestDesc" label="意见描述"></el-table-column>
+        <el-table-column prop="createUserName" label="提交人"></el-table-column>
+        <el-table-column prop="createUserMobile" label="提交人手机号"></el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -52,28 +28,26 @@
 
 <script>
 import {
-  getWorkerEmptyApi,
-  assignWorkersApi
+  getSuggestionListApi
 } from '@/api/'
 
 export default {
   name: 'workers',
-  props: {
-    programId: {
-      type: Number,
-      default: null
-    }
-  },
+
   data() {
     return {
       query: {
-        workerName: '',
+        page: 0,
+        pageSize: 10
       },
       tableData: [],
       multipleSelection: [],
       delList: [],
       editVisible: false,
       pageTotal: 0,
+      form: {},
+      idx: -1,
+      id: -1
     };
   },
   created() {
@@ -81,9 +55,10 @@ export default {
   },
   methods: {
     async getData() {
-      const res = await getWorkerEmptyApi(this.query)
+      const res = await getSuggestionListApi(this.query)
       if (res && res.code === 0) {
-        this.tableData = res.data
+        this.tableData = res.data.list
+        this.pageTotal = res.data.totalCount
       }
     },
     // 触发搜索按钮
@@ -91,25 +66,10 @@ export default {
       this.$set(this.query, 'page', 1);
       this.getData();
     },
-    async handleAddWorkers() {
-      if (!this.multipleSelection.length) {
-        this.$message.warning('请至少选中一条');
-        return
-      }
-      let ids = this.multipleSelection.map(item => {
-        return item.userId
-      })
-      console.log(ids)
-      const params = {
-        programId: this.programId,
-        userIds: ids.toString()
-      }
-      const res = await assignWorkersApi(params)
-      if (res && res.code == 0) {
-        this.$emit('close')
-      }
+    viewDetail(index,row){
+      console.log(index)
+      window.open(row.signFileUrl , '__blank')
     },
-
     // 删除操作
     handleDelete(index, row) {
       // 二次确认删除
@@ -124,7 +84,6 @@ export default {
     },
     // 多选操作
     handleSelectionChange(val) {
-      console.log(val)
       this.multipleSelection = val;
     },
     delAllSelection() {
@@ -136,6 +95,18 @@ export default {
       }
       this.$message.error(`删除了${str}`);
       this.multipleSelection = [];
+    },
+    // 编辑操作
+    handleEdit(index, row) {
+      this.idx = index;
+      this.form = row;
+      this.editVisible = true;
+    },
+    // 保存编辑
+    saveEdit() {
+      this.editVisible = false;
+      this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+      this.$set(this.tableData, this.idx, this.form);
     },
     // 分页导航
     handlePageChange(val) {
