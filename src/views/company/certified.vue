@@ -125,6 +125,9 @@ export default {
         page: 1,
         pageSize: 10
       },
+      additionRate: 0,
+      serviceRate: 0,
+      vatRate: 0,
       tableData: [],
       editVisible: false,
       pageTotal: 0,
@@ -179,6 +182,9 @@ export default {
     },
     showEdit(index, row) {
       this.form = row
+      this.additionRate = row.additionRate*100
+      this.serviceRate = row.serviceRate*100
+      this.vatRate = row.vatRate*100
       this.editVisible = true
     },
     // 保存编辑
@@ -203,30 +209,6 @@ export default {
     }
   },
   computed: {
-    additionRate: {
-      get: function () {
-        return this.form.additionRate*100
-      },
-      set: function (val) {
-        this.form.additionRate = val / 100
-      }
-    },
-    serviceRate: {
-      get: function () {
-        return this.form.serviceRate*100
-      },
-      set: function (val) {
-        this.form.serviceRate = val / 100
-      }
-    },
-    vatRate: {
-      get: function () {
-        return this.form.vatRate*100
-      },
-      set: function (val) {
-        this.form.vatRate = val / 100
-      }
-    }
   }
 };
 </script>

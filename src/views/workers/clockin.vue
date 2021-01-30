@@ -21,15 +21,16 @@
           </el-option>
         </el-select>
       </div>
+      <el-button size="small" type="primary" @click="beforeUpload">点击上传</el-button>
       <el-upload
         class="upload-excel"
+        ref="fileRefs"
         action="/worker/sign/upload"
-        :before-upload="beforeUpload"
         :auto-upload="false"
         :on-change="uploadFile"
         :on-success="uploadSuccess"
         :file-list="fileList">
-        <el-button slot="trigger" size="small" type="primary">点击上传</el-button>
+        <el-button ref="uploadBtn" style="display:none;" slot="trigger" size="small" type="primary">点击上传</el-button>
       </el-upload>
     </div>
   </div>
@@ -138,15 +139,15 @@ export default {
       this.getData();
     },
     beforeUpload() {
-      console.log('beff--')
       if (!this.query.companyId) {
         this.$message.warning('请先选择公司');
-        return false
+        return
       }
       if (!this.query.workId) {
         this.$message.warning('请先选择项目');
-        return false
+        return
       }
+      this.$refs['fileRefs'].$refs['upload-inner'].handleClick()
     },
     async uploadFile(file){
       if (!this.query.companyId) {
