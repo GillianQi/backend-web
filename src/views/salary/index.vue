@@ -22,11 +22,11 @@
         <el-table-column prop="companyUserName" label="客户名称"></el-table-column>
         <el-table-column prop="companyName" label="企业名称"></el-table-column>
         <el-table-column prop="companyWorkInfoName" label="工程项目名称"></el-table-column>
-        <el-table-column prop="salaryDate" label="工资日期"></el-table-column>
-        <el-table-column prop="preSalary" label="预发工资"></el-table-column>
+        <el-table-column prop="salaryDate" label="佣金日期"></el-table-column>
+        <el-table-column prop="preSalary" label="预发佣金"></el-table-column>
         <el-table-column prop="sumSalary" label="总发金额"></el-table-column>
         <el-table-column prop="createTime" label="申请时间"></el-table-column>
-        <el-table-column label="工资表" align="center">
+        <el-table-column label="佣金表" align="center">
           <template slot-scope="scope">
             <el-image
               class="table-td-thumb"

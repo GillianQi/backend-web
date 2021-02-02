@@ -12,8 +12,18 @@
         ref="multipleTable"
         header-cell-class-name="table-header"
       >
-        <el-table-column prop="programCompanyName" label="施工单位"></el-table-column>
+        <el-table-column prop="programCompanyName" label="商户名称"></el-table-column>
         <el-table-column prop="programName" label="工程名称"></el-table-column>
+        <el-table-column label="合同" align="center">
+          <template slot-scope="scope">
+            <el-image
+              v-if="scope.row.contractImg"
+              class="table-td-thumb"
+              :src="scope.row.contractImg.split(separator)[0]"
+              :preview-src-list="scope.row.contractImg.split(separator)"
+            ></el-image>
+          </template>
+        </el-table-column>
         <el-table-column prop="programStartTime" label="起始时间"></el-table-column>
         <el-table-column prop="programEndTime" label="终止时间"></el-table-column>
         <el-table-column prop="programRealEndTime" label="实际结束时间"></el-table-column>
@@ -101,7 +111,8 @@ export default {
       form: {},
       idx: -1,
       id: -1,
-      viewId: -1
+      viewId: -1,
+      separator: '#&#'
     };
   },
   created() {

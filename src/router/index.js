@@ -27,12 +27,12 @@ export default new Router({
         {
           path: '/company',
           component: () => import('@/views/company/index.vue'),
-          meta: { title: '施工单位管理' }
+          meta: { title: '商户管理' }
         },
         {
           path: '/company-certified',
           component: () => import('@/views/company/certified.vue'),
-          meta: { title: '施工单位管理' }
+          meta: { title: '商户管理' }
         },
         {
           path: '/company-engineer',
@@ -40,8 +40,18 @@ export default new Router({
           meta: { title: '工程管理' }
         },
         {
+          path: '/engineer-approve',
+          component: () => import('@/views/company/approuve.vue'),
+          meta: { title: '待审批项目' }
+        },
+        {
           path: '/recharge-apply',
           component: () => import('@/views/company/rechargeApply.vue'),
+          meta: { title: '充值申请' }
+        },
+        {
+          path: '/recharge-finish',
+          component: () => import('@/views/company/rechargeFinish.vue'),
           meta: { title: '充值申请' }
         },
         {
@@ -52,22 +62,22 @@ export default new Router({
         {
           path: '/salary',
           component: () => import('@/views/salary/index.vue'),
-          meta: { title: '工资管理-待申请' }
+          meta: { title: '佣金管理-待申请' }
         },
         {
           path: '/salary-finish',
           component: () => import('@/views/salary/finish.vue'),
-          meta: { title: '工资管理-已完成' }
+          meta: { title: '佣金管理-已完成' }
         },
         {
           path: '/salary-list',
           component: () => import('@/views/salary/list.vue'),
-          meta: { title: '工资管理' }
+          meta: { title: '佣金管理' }
         },
         {
           path: '/salary-edit',
           component: () => import('@/views/salary/edit.vue'),
-          meta: { title: '工资管理' }
+          meta: { title: '佣金管理' }
         },
         {
           path: '/invoice-common',

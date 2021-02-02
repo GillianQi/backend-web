@@ -22,8 +22,8 @@
         <el-table-column prop="signDate" label="出勤天数"></el-table-column>
         <el-table-column prop="mobile" label="手机号"></el-table-column>
         <el-table-column prop="bankCard" label="银行卡号"></el-table-column>
-        <el-table-column prop="salaryDate" label="工资月份"></el-table-column>
-        <el-table-column prop="salary" label="工资金额（元）"></el-table-column>
+        <el-table-column prop="salaryDate" label="佣金月份"></el-table-column>
+        <el-table-column prop="salary" label="佣金金额（元）"></el-table-column>
 
       </el-table>
       <div class="pagination">

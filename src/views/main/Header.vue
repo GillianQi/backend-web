@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <!-- 折叠按钮 -->
-    <div class="collapse-btn" @click="collapseChage">
+    <div class="collapse-btn">
       <i v-if="!collapse" class="el-icon-s-fold"></i>
       <i v-else class="el-icon-s-unfold"></i>
     </div>
@@ -32,7 +32,7 @@ import bus from '@/common/bus';
 export default {
   data() {
     return {
-      collapse: false,
+      collapse: true,
       name: 'linxin',
       message: 2
     };

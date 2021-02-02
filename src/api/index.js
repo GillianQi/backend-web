@@ -14,7 +14,7 @@ export const getProjectListApi = data => httpGet('/companyInfo/getCompanyWoekLis
 export const getWorkersByProjectApi = data => httpPostJSON('/companyInfo/getFinishCompanyWoekDetail', data) // 公司下施工队列表
 export const assignWorkersApi = data => httpPost('/companyInfo/staffAssignment', data) // 给项目分配员工-包括单个和批量分配
 export const removeWorkerdApi = data => httpPost('/companyInfo/unstaffAssignment', data) // 从项目踢出员工-包括单个和批量踢出
-export const getSalaryListApi = data => httpPostJSON('/salaryInfo/getUndelSalaryList', data) // 获取工资单列表
+export const getSalaryListApi = data => httpPostJSON('/salaryInfo/getUndelSalaryList', data) // 获取佣金单列表
 export const getSalaryDetailApi = data => httpPostJSON('/salaryInfo/getUndelSalaryListDetail', data) // 获取薪酬请求下的员工薪酬详情
 export const updateSalaryDetailApi = data => httpPostJSON('/salaryInfo/editPerson', data) // 编辑员工薪资详情
 export const importWorkersSalaryApi = data => httpUpload('/salaryInfo/batchInsertSalary', data) // 员工薪酬批量导入
@@ -31,5 +31,10 @@ export const getUserListApi = data => httpGet('/user/list', data) // 用户列�
 export const addUserApi = data => httpPostJSON('/user/add', data)  // 添加用户
 export const resetPwdApi = data => httpPost('/user/changePwd', data)  // 重置密码
 export const refuseSalaryApi= data => httpPost('/salaryInfo/refuseSalaryDel', data)
+export const forbidUserApi= data => httpPost('/user/forbid', data)
+export const openUserApi= data => httpPost('/user/open', data)
+export const getProgramApprouveListApi = data => httpGet('/companyInfo/getDelCompanyWorkList', data) // 待审批施工队
+export const approuveProgramApi = data => httpGet('/companyInfo/delCompanyWork', data) // 用户列表
+export const rechargeFinishListApi = data => httpGet('/companyInfo/getCompanyAccountApplyFinishList', data) // 充值申请已完成
 
 

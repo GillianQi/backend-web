@@ -32,6 +32,7 @@
             <span v-else>未在职</span>
           </template>
         </el-table-column>
+        <el-table-column prop="totalSalary" label="总佣金"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button

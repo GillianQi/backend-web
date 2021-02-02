@@ -16,21 +16,19 @@
       >
         <el-table-column prop="userName" label="姓名"></el-table-column>
         <el-table-column prop="mobile" label="手机号"></el-table-column>
-        <el-table-column prop="idCard" label="邮箱"></el-table-column>
-        <el-table-column prop="workStatus" label="工作状态">
-          <template slot-scope="scope">
-            <span v-if="scope.row.workStatus == '1'">在职</span>
-            <span v-else>未在职</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column prop="email" label="邮箱"></el-table-column>
+        <el-table-column prop="forbidStatus" label="工作状态">
           <template slot-scope="scope">
             <el-button
-              v-if="scope.row.signFileUrl"
+              v-if="scope.row.forbidStatus == 1"
               type="text"
-              icon="el-icon-view"
-              @click="viewDetail(scope.$index, scope.row)"
-            >查看</el-button>
+              @click="forbidUser(scope.row)"
+            >禁用</el-button>
+            <el-button
+              v-if="scope.row.forbidStatus != 1"
+              type="text"
+              @click="openUser(scope.row)"
+            >启用</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -59,7 +57,7 @@
           <el-input v-model="form.email" :maxlength="50"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
-          <el-input v-model="form.pwd" :maxlength="50"></el-input>
+          <el-input v-model="form.pwd" type="password" :maxlength="50"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -73,6 +71,8 @@
 <script>
 import {
   getUserListApi,
+  forbidUserApi,
+  openUserApi,
   addUserApi
 } from '@/api/'
 
@@ -127,6 +127,20 @@ export default {
     handleSearch() {
       this.$set(this.query, 'page', 1);
       this.getData();
+    },
+    async forbidUser(row) {
+      const res = await forbidUserApi({userId: row.id})
+      if (res && res.code == 0) {
+        this.$message.success('禁用成功')
+        this.getData()
+      }
+    },
+    async openUser(row) {
+      const res = await openUserApi({userId: row.id})
+      if (res && res.code) {
+        this.$message.success('启用成功')
+        this.getData()
+      }
     },
     viewDetail(index,row){
       console.log(index)

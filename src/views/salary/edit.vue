@@ -32,8 +32,8 @@
         <el-table-column prop="signDate" label="出勤天数"></el-table-column>
         <el-table-column prop="mobile" label="手机号"></el-table-column>
         <el-table-column prop="bankCard" label="银行卡号"></el-table-column>
-        <el-table-column prop="salaryDate" label="工资月份"></el-table-column>
-        <el-table-column prop="salary" label="工资金额（元）"></el-table-column>
+        <el-table-column prop="salaryDate" label="佣金月份"></el-table-column>
+        <el-table-column prop="salary" label="佣金金额（元）"></el-table-column>
         <el-table-column label="操作" width="80" align="center">
           <template slot-scope="scope">
             <el-button
@@ -74,6 +74,22 @@
         <el-button type="primary" @click="saveEdit">确 定</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog title="提示" :visible.sync="detailVisible" width="60%">
+      <div style="margin-bottom: 15px;">导入失败人员信息：</div>
+      <el-table
+        :data="failList"
+        border
+        class="table"
+        header-cell-class-name="table-header"
+      >
+        <el-table-column prop="userName" label="姓名"></el-table-column>
+        <el-table-column prop="idCard" label="身份证号"></el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="detailVisible = false">关 闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -95,6 +111,8 @@ export default {
         page: 1,
         pageSize: 10
       },
+      detailVisible: false,
+      failList: [],
       tableData: [],
       fileList: [],
       delList: [],
@@ -167,9 +185,14 @@ export default {
       formData.append('mainId', this.$route.query.id);
       formData.append('file',file.raw);
       const res = await importWorkersSalaryApi(formData)
-      if (res && res.code == 0) {
+      if (res && res.code == 0 &&(!res.data || res.data.length == 0)) {
         this.$message.success('上传成功')
         this.fileList = []
+        this.getData()
+      } else if (res.data && res.data.length) {
+        this.failList = res.data
+        this.fileList = []
+        this.detailVisible = true
       } else {
         this.$message.warning(res.message)
       }

@@ -33,8 +33,8 @@ export default {
   data: function() {
     return {
       param: {
-        username: 'admin',
-        password: 'qwer123',
+        username: '',
+        password: '',
       },
       rules: {
         username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],

@@ -97,7 +97,8 @@ export default {
       pageTotal: 0,
       form: {},
       idx: -1,
-      id: -1
+      id: -1,
+      separator: '#&#'
     };
   },
   created() {

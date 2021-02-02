@@ -3,11 +3,12 @@
     <el-menu
       class="sidebar-el-menu"
       :default-active="$route.fullPath"
+      :default-openeds="defaultMenus"
+      :unique-opened="false"
       :collapse="collapse"
       background-color="#324157"
       text-color="#bfcbd9"
       active-text-color="#20a0ff"
-      unique-opened
       router
     >
       <template v-for="item in items">
@@ -56,22 +57,23 @@ export default {
     return {
       collapse: false,
       role: localStorage.getItem('role'),
+      defaultMenus: ['workers', 'company', 'salary', 'invoice', 'invoice-todo', 'invoice-finish'],
       items: [
         {
           icon: 'el-icon-s-home',
           index: 'workers',
-          title: '工人管理',
+          title: '灵工管理',
           subs: [
             {
               index: 'workers',
-              title: '工人列表'
+              title: '灵工列表'
             }
           ]
         },
         {
           icon: 'el-icon-office-building',
           index: 'company',
-          title: '施工单位',
+          title: '商户管理',
           subs: [
             {
               index: 'company',
@@ -82,15 +84,24 @@ export default {
               title: '已认证'
             },
             {
+              icon: 'el-icon-notebook-2',
+              index: 'engineer-approve',
+              title: '待审批项目'
+            },
+            {
               index: 'recharge-apply',
               title: '充值申请'
-            }
+            },
+            {
+              index: 'recharge-finish',
+              title: '已完成申请'
+            },
           ]
         },
         {
           icon: 'el-icon-money',
           index: 'salary',
-          title: '工资管理',
+          title: '佣金管理',
            subs: [
             {
               index: 'salary',
@@ -101,6 +112,7 @@ export default {
               title: '已完成'
             },
           ]
+          
         },
         {
           icon: 'el-icon-receiving',
@@ -157,7 +169,7 @@ export default {
       bus.$emit('collapse-content', msg);
     });
     if (this.role == 99999) {
-      this.items[0].subs.push({index: 'workers-clock',title: '打卡记录'})
+      this.items[0].subs.push({icon: 'el-icon-date', index: 'workers-clock',title: '打卡记录'})
       this.items.push({icon: 'el-icon-user', index: 'users', title: '用户管理'})
     }
   }
