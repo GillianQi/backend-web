@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="container">
+    <div class="container" style="padding-top: 10px;">
+      <img src="../../assets/img/back.png" style="height: 20px" @click="back()">
       <div class="handle-box">
         姓名：<el-input v-model="query.userName" placeholder="姓名" class="handle-input mr10"></el-input>
         身份证号： <el-input v-model="query.idCard" placeholder="身份证号" class="handle-input mr10"></el-input>
@@ -91,6 +92,9 @@ export default {
       if (res && res.code == 0) {
         this.tableData = res.data.list
       }
+    },
+    back() {
+      this.$router.go(-1)
     },
     handleSearch() {
       this.$set(this.query, 'page', 1);

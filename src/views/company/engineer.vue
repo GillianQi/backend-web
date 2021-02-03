@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div class="container">
+    <div class="container" style="padding-top: 10px;">
+      <img src="../../assets/img/back.png" style="height: 20px" @click="back()">
       <div class="handle-box">
-        工程名称 <el-input v-model="query.programName" placeholder="工程名称" class="handle-input mr10"></el-input>
+        项目名称 <el-input v-model="query.programName" placeholder="项目名称" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="getData">搜索</el-button>
       </div>
       <el-table
@@ -13,7 +14,7 @@
         header-cell-class-name="table-header"
       >
         <el-table-column prop="programCompanyName" label="商户名称"></el-table-column>
-        <el-table-column prop="programName" label="工程名称"></el-table-column>
+        <el-table-column prop="programName" label="项目名称"></el-table-column>
         <el-table-column label="合同" align="center">
           <template slot-scope="scope">
             <el-image
@@ -125,6 +126,9 @@ export default {
          this.tableData = res.data.list
         this.pageTotal = res.data.totalCount
       }
+    },
+    back() {
+      this.$router.go(-1)
     },
     // 操作
     addWorkers(index, row) {

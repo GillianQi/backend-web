@@ -21,6 +21,7 @@
             ></el-image>
           </template>
         </el-table-column>
+        <el-table-column prop="updateTime" label="操作时间"></el-table-column>
         <el-table-column prop="descript" label="备注"></el-table-column>
       </el-table>
       <div class="pagination">

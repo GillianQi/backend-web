@@ -11,8 +11,8 @@
       </div>
       <div class="handle-box">
         <el-input v-model="query.customerName" placeholder="顾客姓名" class="handle-input mr10"></el-input>
-        <el-input v-model="query.billCompanyName" placeholder="开票公司名称" class="handle-input mr10"></el-input>
-        <el-input v-model="query.collectionCompanyName" placeholder="收票公司名称" class="handle-input mr10"></el-input>
+        <el-input v-model="query.billCompanyName" placeholder="开票商户名称" class="handle-input mr10"></el-input>
+        <el-input v-model="query.collectionCompanyName" placeholder="收票商户名称" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
       <el-table

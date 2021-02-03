@@ -3,8 +3,8 @@
     <div class="container">
       <div class="handle-box">
         客户名称：<el-input v-model="query.userName" placeholder="客户名称" class="handle-input mr10"></el-input>
-        企业名称： <el-input v-model="query.companyName" placeholder="企业名称" class="handle-input mr10"></el-input>
-        工程名称： <el-input v-model="query.programName" placeholder="工程名称" class="handle-input mr10"></el-input>
+        商户名称： <el-input v-model="query.companyName" placeholder="商户名称" class="handle-input mr10"></el-input>
+        项目名称： <el-input v-model="query.programName" placeholder="项目名称" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
         <el-button type="primary" @click="handleSubmit">提交</el-button>
         <el-button type="primary" @click="handleRefuse">拒绝</el-button>
@@ -20,11 +20,11 @@
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="orderNum" label="订单编号"></el-table-column>
         <el-table-column prop="companyUserName" label="客户名称"></el-table-column>
-        <el-table-column prop="companyName" label="企业名称"></el-table-column>
+        <el-table-column prop="companyName" label="商户名称"></el-table-column>
         <el-table-column prop="companyWorkInfoName" label="工程项目名称"></el-table-column>
         <el-table-column prop="salaryDate" label="佣金日期"></el-table-column>
         <el-table-column prop="preSalary" label="预发佣金"></el-table-column>
-        <el-table-column prop="sumSalary" label="总发金额"></el-table-column>
+        <el-table-column prop="sumSalary" label="总服务费"></el-table-column>
         <el-table-column prop="createTime" label="申请时间"></el-table-column>
         <el-table-column label="佣金表" align="center">
           <template slot-scope="scope">

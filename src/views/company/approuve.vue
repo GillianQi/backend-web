@@ -14,7 +14,7 @@
         header-cell-class-name="table-header"
       >
         <el-table-column prop="programCompanyName" label="商户名称"></el-table-column>
-        <el-table-column prop="programName" label="工程名称"></el-table-column>
+        <el-table-column prop="programName" label="项目名称"></el-table-column>
         <el-table-column label="合同" align="center">
           <template slot-scope="scope">
             <el-image
@@ -39,10 +39,12 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
+              v-if="scope.row.programStatus != 0"
               type="text"
               @click="approuve(scope.row,'1')"
             >同意</el-button>
             <el-button
+              v-if="scope.row.programStatus != 0"
               type="text"
               @click="approuve(scope.row,'0')"
             >拒绝</el-button>

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="container">
+    <div class="container" style="padding-top: 10px;">
+      <img src="../../assets/img/back.png" style="height: 20px" @click="back()">
       <el-table
         :data="tableData"
         border
@@ -8,7 +9,7 @@
         ref="multipleTable"
         header-cell-class-name="table-header">
         <!-- <el-table-column prop="userName" label="用户认证姓名"></el-table-column> -->
-        <el-table-column prop="companyName" label="公司名称"></el-table-column>
+        <el-table-column prop="companyName" label="商户名称"></el-table-column>
         <el-table-column prop="accountChange" label="金额">
            <template slot-scope="scope">
             <span v-if="scope.row.changeType == '1'">+</span>
@@ -74,6 +75,9 @@ export default {
         this.tableData = res.data.list
         this.pageTotal = res.data.totalCount
       }
+    },
+    back() {
+      this.$router.go(-1)
     },
     // 分页导航
     handlePageChange(val) {

@@ -2,7 +2,7 @@
   <div>
     <div class="container">
       <div class="handle-box">
-        公司名称 <el-input v-model="query.companyName" placeholder="公司名称" class="handle-input mr10"></el-input>
+        商户名称 <el-input v-model="query.companyName" placeholder="商户名称" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
       <el-table
@@ -11,23 +11,13 @@
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header">
-        <el-table-column prop="companyName" label="公司名称"></el-table-column>
+        <el-table-column prop="companyName" label="商户名称"></el-table-column>
         <el-table-column label="营业执照" align="center">
           <template slot-scope="scope">
             <el-image
               class="table-td-thumb"
               :src="scope.row.companyImg"
               :preview-src-list="[scope.row.companyImg]"
-            ></el-image>
-          </template>
-        </el-table-column>
-        <el-table-column label="合同" align="center">
-          <template slot-scope="scope">
-            <el-image
-              v-if="scope.row.contractImg"
-              class="table-td-thumb"
-              :src="scope.row.contractImg.split(separator)[0]"
-              :preview-src-list="scope.row.contractImg.split(separator)"
             ></el-image>
           </template>
         </el-table-column>
